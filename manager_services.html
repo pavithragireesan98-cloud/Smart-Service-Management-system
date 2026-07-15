@@ -1,0 +1,280 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Centre Services | Manager Hub</title>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #2dd4bf;
+            --bg: #020617;
+            --card-bg: rgba(255, 255, 255, 0.03);
+            --card-border: rgba(255, 255, 255, 0.08);
+            --text-main: #f8f9fa;
+            --text-dim: #94a3b8;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Outfit', sans-serif;
+        }
+
+        body {
+            background: var(--bg);
+            color: var(--text-main);
+            min-height: 100vh;
+            background-image: radial-gradient(at 0% 0%, rgba(45, 212, 191, 0.08) 0px, transparent 50%);
+        }
+
+        header {
+            background: rgba(2, 6, 23, 0.8);
+            backdrop-filter: blur(12px);
+            padding: 20px 60px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid var(--card-border);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        header h1 {
+            font-size: 32px;
+            font-weight: 800;
+            background: linear-gradient(to right, #fff, #2dd4bf);
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        header a {
+            color: #fff;
+            text-decoration: none;
+            background: rgba(255, 255, 255, 0.05);
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-size: 13px;
+        }
+
+        .manager-profile {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            background: rgba(255, 255, 255, 0.05);
+            padding: 6px 16px;
+            border-radius: 20px;
+            border: 1px solid var(--card-border);
+        }
+
+        .manager-img {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 2px solid var(--primary);
+        }
+
+        .manager-name {
+            font-size: 13px;
+            font-weight: 700;
+            color: #fff;
+        }
+
+        .container {
+            max-width: 1000px;
+            margin: 60px auto;
+            padding: 0 40px;
+        }
+
+        .top-bar {
+            margin-bottom: 40px;
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-end;
+        }
+
+        .top-bar h2 {
+            font-size: 32px;
+            font-weight: 800;
+        }
+
+        .btn-request {
+            background: var(--primary);
+            color: #020617;
+            text-decoration: none;
+            padding: 12px 28px;
+            border-radius: 12px;
+            font-weight: 800;
+            font-size: 14px;
+            transition: 0.3s;
+        }
+
+        .btn-request:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 20px rgba(45, 212, 191, 0.2);
+        }
+
+        .services-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(400px, 1fr));
+            gap: 24px;
+        }
+
+        .service-card {
+            background: var(--card-bg);
+            border: 1px solid var(--card-border);
+            border-radius: 24px;
+            padding: 32px;
+            transition: 0.3s;
+            position: relative;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .service-card:hover {
+            border-color: var(--primary);
+            background: rgba(255, 255, 255, 0.05);
+            transform: scale(1.02);
+        }
+
+        .service-card h3 {
+            font-size: 22px;
+            font-weight: 800;
+            color: #fff;
+            margin-bottom: 12px;
+        }
+
+        .fee-tag {
+            display: inline-block;
+            background: rgba(45, 212, 191, 0.1);
+            color: var(--primary);
+            padding: 4px 12px;
+            border-radius: 8px;
+            font-weight: 800;
+            font-size: 13px;
+            margin-bottom: 15px;
+            width: fit-content;
+        }
+
+        .description {
+            font-size: 14px;
+            color: var(--text-dim);
+            line-height: 1.6;
+            margin-bottom: 20px;
+        }
+
+        .docs-section {
+            margin-top: auto;
+            padding-top: 20px;
+            border-top: 1px solid var(--card-border);
+        }
+
+        .docs-label {
+            font-size: 11px;
+            font-weight: 800;
+            color: var(--primary);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 8px;
+            display: block;
+        }
+
+        .docs-list {
+            font-size: 13px;
+            color: #fff;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 100px;
+            color: var(--text-dim);
+        }
+    </style>
+</head>
+
+<body>
+    <header>
+        <div style="display: flex; align-items: center; gap: 32px;">
+            <div style="display: flex; align-items: center; gap: 12px;">
+                <h1>Manager Hub</h1>
+            </div>
+            <div style="height: 36px; width: 1px; background: var(--card-border);"></div>
+            <div style="font-size: 32px; font-weight: 800; color: var(--primary); letter-spacing: -0.5px;">{{
+                c_name_branded }}</div>
+        </div>
+        <div style="display: flex; align-items: center; gap: 20px;">
+            <div class="manager-profile">
+                {% if m_pic %}
+                <img src="{{ url_for('static', filename='uploads/' + m_pic) }}" class="manager-img" alt="Manager">
+                {% else %}
+                <div class="manager-img"
+                    style="background: rgba(255,255,255,0.05); display: flex; align-items: center; justify-content: center; font-size: 12px;">
+                    👤</div>
+                {% endif %}
+                <span class="manager-name">{{ m_name }}</span>
+            </div>
+            <a href="/manager">← Dashboard</a>
+        </div>
+    </header>
+
+    <div class="container">
+        {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+        {% for category, message in messages %}
+        <div
+            style="background: rgba(45, 212, 191, 0.1); color: var(--primary); padding: 16px; border-radius: 12px; border: 1px solid rgba(45, 212, 191, 0.2); margin-bottom: 24px; font-size: 14px; display: flex; align-items: center; gap: 10px;">
+            <span>ℹ️</span>
+            {{ message }}
+        </div>
+        {% endfor %}
+        {% endif %}
+        {% endwith %}
+
+        <div class="top-bar">
+            <div>
+                <p
+                    style="color: var(--primary); font-size: 11px; font-weight: 800; text-transform: uppercase; letter-spacing: 2px; margin-bottom: 8px;">
+                    Active Portfolio</p>
+                <h2>Centre Services</h2>
+            </div>
+            <a href="/manager/request_service" class="btn-request">Request Expansion +</a>
+        </div>
+
+        {% if not services %}
+        <div class="service-card empty-state" style="grid-column: 1/-1;">
+            <div style="font-size: 40px; margin-bottom: 20px;">📋</div>
+            <p>No services are currently active in your centre catalogue.</p>
+        </div>
+        {% else %}
+        <div class="services-grid">
+            {% for s in services %}
+            <div class="service-card">
+                <h3>{{ s[1] }}</h3>
+                <div class="fee-tag">₹{{ s[2] }} / Process</div>
+                <p class="description">{{ s[3] }}</p>
+
+                {% if s[4] %}
+                <div class="docs-section">
+                    <span class="docs-label">Requirement Matrix:</span>
+                    <div class="docs-list">
+                        <span>📄</span> {{ s[4] }}
+                    </div>
+                </div>
+                {% endif %}
+            </div>
+            {% endfor %}
+        </div>
+        {% endif %}
+    </div>
+</body>
+
+</html>

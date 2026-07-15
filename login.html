@@ -1,0 +1,287 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Secure Login | Akshaya Service Hub</title>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #6366f1;
+            --primary-light: #818cf8;
+            --secondary: #06b6d4;
+            --bg: #030712;
+            --card-bg: rgba(255, 255, 255, 0.03);
+            --card-border: rgba(255, 255, 255, 0.08);
+            --text-main: #f8f9fa;
+            --text-dim: #94a3b8;
+            --glass: rgba(15, 23, 42, 0.6);
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Outfit', sans-serif;
+        }
+
+        body {
+            background-color: var(--bg);
+            background-image: 
+                radial-gradient(circle at 10% 10%, rgba(99, 102, 241, 0.1) 0%, transparent 40%),
+                radial-gradient(circle at 90% 90%, rgba(6, 182, 212, 0.1) 0%, transparent 40%),
+                radial-gradient(circle at 50% 50%, rgba(244, 63, 94, 0.03) 0%, transparent 50%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+        }
+
+        .login-container {
+            position: relative;
+            width: 100%;
+            max-width: 460px;
+            padding: 24px;
+            z-index: 10;
+        }
+
+        .glass-card {
+            background: var(--glass);
+            backdrop-filter: blur(40px);
+            border: 1px solid var(--card-border);
+            border-radius: 32px;
+            padding: 60px 48px;
+            box-shadow: 0 40px 100px rgba(0, 0, 0, 0.6);
+            animation: slideUp 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        @keyframes slideUp {
+            from { opacity: 0; transform: translateY(40px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 48px;
+        }
+
+        .logo-box {
+            width: 70px;
+            height: 70px;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            border-radius: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 24px;
+            font-size: 32px;
+            color: #fff;
+            box-shadow: 0 10px 30px rgba(99, 102, 241, 0.3);
+            transform: rotate(-5deg);
+        }
+
+        h1 {
+            font-size: 32px;
+            font-weight: 800;
+            background: linear-gradient(to right, #fff, var(--text-dim));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 10px;
+            letter-spacing: -0.5px;
+        }
+
+        .subtitle {
+            font-size: 15px;
+            color: var(--text-dim);
+            font-weight: 500;
+        }
+
+        .form-group {
+            margin-bottom: 28px;
+            position: relative;
+        }
+
+        label {
+            display: block;
+            font-size: 12px;
+            font-weight: 800;
+            color: var(--primary-light);
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            margin-bottom: 12px;
+            transition: 0.3s;
+        }
+
+        input {
+            width: 100%;
+            padding: 18px 24px;
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid var(--card-border);
+            border-radius: 16px;
+            color: #fff;
+            font-size: 16px;
+            transition: 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        input:focus {
+            outline: none;
+            border-color: var(--primary);
+            background: rgba(255, 255, 255, 0.08);
+            box-shadow: 0 0 0 4px rgba(99, 102, 241, 0.1);
+        }
+
+        .toggle-password {
+            position: absolute;
+            right: 18px;
+            top: 50px;
+            cursor: pointer;
+            font-size: 12px;
+            color: var(--secondary);
+            font-weight: 800;
+            text-transform: uppercase;
+            padding: 10px;
+            background: transparent;
+            border: none;
+            z-index: 5;
+            transition: 0.3s;
+        }
+
+        .toggle-password:hover { color: var(--primary-light); }
+
+        .btn-login {
+            width: 100%;
+            padding: 18px;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            border: none;
+            border-radius: 16px;
+            color: #fff;
+            font-size: 16px;
+            font-weight: 800;
+            cursor: pointer;
+            transition: 0.3s;
+            margin-top: 12px;
+            box-shadow: 0 15px 35px rgba(99, 102, 241, 0.25);
+        }
+
+        .btn-login:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 20px 40px rgba(99, 102, 241, 0.4);
+            filter: brightness(1.1);
+        }
+
+        .error-msg {
+            background: rgba(244, 63, 94, 0.1);
+            border-left: 4px solid #f43f5e;
+            padding: 16px;
+            border-radius: 12px;
+            color: #fda4af;
+            font-size: 14px;
+            margin-bottom: 32px;
+            animation: shake 0.4s cubic-bezier(.36,.07,.19,.97) both;
+        }
+
+        @keyframes shake {
+            10%, 90% { transform: translate3d(-1px, 0, 0); }
+            20%, 80% { transform: translate3d(2px, 0, 0); }
+            30%, 50%, 70% { transform: translate3d(-4px, 0, 0); }
+            40%, 60% { transform: translate3d(4px, 0, 0); }
+        }
+
+        .links {
+            margin-top: 40px;
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+            text-align: center;
+        }
+
+        .links a {
+            color: var(--text-dim);
+            text-decoration: none;
+            font-size: 14px;
+            transition: 0.3s;
+            font-weight: 500;
+        }
+
+        .links a span {
+            color: var(--primary-light);
+            font-weight: 700;
+        }
+
+        .links a:hover { color: #fff; }
+
+        /* Decorations */
+        .blob {
+            position: absolute;
+            width: 400px;
+            height: 400px;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            border-radius: 50%;
+            filter: blur(100px);
+            opacity: 0.1;
+            z-index: 0;
+            animation: blobFloat 20s infinite alternate;
+        }
+
+        @keyframes blobFloat {
+            from { transform: translate(-10%, -10%) scale(1); }
+            to { transform: translate(10%, 10%) scale(1.2); }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="blob" style="top: -100px; left: -100px;"></div>
+    <div class="blob" style="bottom: -100px; right: -100px; background: var(--secondary);"></div>
+
+    <div class="login-container">
+        <div class="glass-card">
+            <div class="header">
+                <div class="logo-box">🏛</div>
+                <h1>Portal Access</h1>
+                <p class="subtitle">Secure Operational Authentication</p>
+            </div>
+
+            {% if error %}
+            <div class="error-msg">
+                {{ error }}
+            </div>
+            {% endif %}
+
+            <form method="POST">
+                <div class="form-group">
+                    <label>Internal Identifier</label>
+                    <input type="email" name="email" placeholder="staff@akshaya.gov" required autocomplete="email">
+                </div>
+
+                <div class="form-group">
+                    <label>Secure Credential</label>
+                    <input type="password" name="password" id="password" placeholder="••••••••" minlength="8" maxlength="8" pattern=".{8}" title="Password must be exactly 8 characters" required autocomplete="current-password">
+                    <button type="button" class="toggle-password" id="togglePassword">View</button>
+                </div>
+
+                <button type="submit" class="btn-login">Authenticate Access</button>
+            </form>
+
+            <div class="links">
+                <a href="/citizen">Access <span>Citizen Hub Portal</span> →</a>
+                <a href="/manager_register">New Center? <span>Onboard Manager</span></a>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const togglePassword = document.querySelector('#togglePassword');
+        const password = document.querySelector('#password');
+
+        togglePassword.addEventListener('click', function (e) {
+            const type = password.getAttribute('type') === 'password' ? 'text' : 'password';
+            password.setAttribute('type', type);
+            this.textContent = type === 'password' ? 'View' : 'Hide';
+        });
+    </script>
+</body>
+
+</html>

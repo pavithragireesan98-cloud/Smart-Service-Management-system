@@ -1,0 +1,453 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Track Token | Akshaya Hub</title>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #6366f1;
+            --primary-light: #818cf8;
+            --secondary: #06b6d4;
+            --bg: #030712;
+            --card-bg: rgba(255, 255, 255, 0.03);
+            --card-border: rgba(255, 255, 255, 0.1);
+            --text-main: #f8f9fa;
+            --text-dim: #94a3b8;
+            --glass: rgba(15, 23, 42, 0.7);
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Outfit', sans-serif;
+        }
+
+        body {
+            background: var(--bg);
+            color: var(--text-main);
+            min-height: 100vh;
+            background-image: 
+                radial-gradient(circle at 0% 0%, rgba(99, 102, 241, 0.1) 0%, transparent 40%),
+                radial-gradient(circle at 100% 100%, rgba(6, 182, 212, 0.1) 0%, transparent 40%);
+        }
+
+        nav {
+            padding: 24px 5%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: rgba(3, 7, 18, 0.8);
+            backdrop-filter: blur(20px);
+            border-bottom: 1px solid var(--card-border);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-size: 20px;
+            font-weight: 800;
+            color: #fff;
+            text-decoration: none;
+        }
+
+        .logo-icon {
+            width: 36px;
+            height: 36px;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .container {
+            max-width: 1000px;
+            margin: 60px auto;
+            padding: 0 5%;
+        }
+
+        .search-container {
+            background: var(--glass);
+            padding: 40px;
+            border-radius: 32px;
+            border: 1px solid var(--card-border);
+            margin-bottom: 40px;
+            backdrop-filter: blur(20px);
+            text-align: center;
+        }
+
+        .search-container h2 {
+            font-size: 32px;
+            font-weight: 800;
+            margin-bottom: 12px;
+            background: linear-gradient(to right, #fff, var(--text-dim));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .search-form {
+            display: flex;
+            gap: 16px;
+            max-width: 500px;
+            margin: 32px auto 0;
+        }
+
+        .search-form input {
+            flex: 1;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid var(--card-border);
+            padding: 16px 20px;
+            border-radius: 16px;
+            color: #fff;
+            font-size: 16px;
+            transition: 0.3s;
+        }
+
+        .search-form input:focus {
+            outline: none;
+            border-color: var(--primary);
+            background: rgba(255, 255, 255, 0.08);
+        }
+
+        .search-btn {
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: #fff;
+            border: none;
+            padding: 0 32px;
+            border-radius: 16px;
+            font-weight: 800;
+            cursor: pointer;
+            transition: 0.3s;
+            box-shadow: 0 10px 20px rgba(99, 102, 241, 0.2);
+        }
+
+        .search-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 15px 30px rgba(99, 102, 241, 0.4);
+        }
+
+        /* Results Table */
+        .results-panel {
+            background: var(--glass);
+            border: 1px solid var(--card-border);
+            border-radius: 32px;
+            overflow: hidden;
+            backdrop-filter: blur(20px);
+            box-shadow: 0 40px 100px rgba(0, 0, 0, 0.3);
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        th {
+            background: rgba(255, 255, 255, 0.02);
+            text-align: left;
+            padding: 20px 24px;
+            font-size: 11px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            color: var(--text-dim);
+            border-bottom: 1px solid var(--card-border);
+        }
+
+        td {
+            padding: 24px;
+            border-bottom: 1px solid var(--card-border);
+            font-size: 15px;
+        }
+
+        tr:last-child td { border-bottom: none; }
+
+        .token-val {
+            font-size: 24px;
+            font-weight: 800;
+            color: var(--primary-light);
+        }
+
+        .service-name { font-weight: 700; color: #fff; margin-bottom: 4px; }
+        .centre-name { font-size: 13px; color: var(--text-dim); }
+
+        .status-pill {
+            padding: 6px 14px;
+            border-radius: 100px;
+            font-size: 11px;
+            font-weight: 800;
+            text-transform: uppercase;
+            display: inline-block;
+        }
+
+        .status-pending { background: rgba(148, 163, 184, 0.1); color: #94a3b8; border: 1px solid rgba(148, 163, 184, 0.2); }
+        .status-scheduled { background: rgba(99, 102, 241, 0.1); color: #818cf8; border: 1px solid rgba(99, 102, 241, 0.2); }
+        .status-timeapproved { background: rgba(6, 182, 212, 0.1); color: #22d3ee; border: 1px solid rgba(6, 182, 212, 0.2); }
+        .status-paid, .status-booked, .status-completed { background: #10b981; color: #020617; }
+        .status-payment-requested { background: #facc15; color: #020617; }
+        .status-cancelled { background: rgba(244, 63, 94, 0.1); color: #f43f5e; border: 1px solid rgba(244, 63, 94, 0.2); }
+
+        .time-val { font-weight: 700; color: var(--primary-light); }
+
+        .action-btns {
+            display: flex;
+            gap: 10px;
+        }
+
+        .btn-mini {
+            padding: 8px 16px;
+            border-radius: 10px;
+            font-size: 12px;
+            font-weight: 700;
+            text-decoration: none;
+            transition: 0.3s;
+        }
+
+        .btn-approve { background: #10b981; color: #020617; }
+        .btn-reject { background: rgba(244, 63, 94, 0.1); color: #f43f5e; border: 1px solid rgba(244, 63, 94, 0.2); }
+        .btn-pay { background: var(--secondary); color: #fff; box-shadow: 0 4px 12px rgba(6, 182, 212, 0.3); }
+
+        .empty-results {
+            padding: 100px;
+            text-align: center;
+            color: var(--text-dim);
+        }
+
+        @media (max-width: 600px) {
+            .container { padding: 0 15px; margin: 30px auto; }
+            .search-container { padding: 24px; border-radius: 24px; }
+            .search-form { flex-direction: column; }
+            .search-btn { padding: 16px; width: 100%; }
+            
+            /* Table to Cards */
+            table, thead, tbody, th, td, tr { 
+                display: block; 
+            }
+            thead tr { 
+                position: absolute;
+                top: -9999px;
+                left: -9999px;
+            }
+            tr { 
+                border-bottom: 1px solid var(--card-border);
+                padding: 20px 15px;
+                background: rgba(255,255,255,0.01);
+            }
+            tr:last-child { border-bottom: none; }
+            
+            td { 
+                border: none;
+                position: relative;
+                text-align: right;
+                padding: 12px 0;
+                font-size: 14px;
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                border-bottom: 1px solid rgba(255,255,255,0.03);
+            }
+            td:last-child { border-bottom: none; }
+            
+            td::before { 
+                content: attr(data-label);
+                font-weight: 700;
+                color: var(--text-dim);
+                font-size: 11px;
+                text-transform: uppercase;
+                letter-spacing: 1px;
+                text-align: left;
+            }
+            
+            .token-val { font-size: 18px; }
+            .action-btns { flex-direction: column; width: auto; align-items: flex-end; }
+            .btn-mini { text-align: center; width: 100%; min-width: 120px; }
+        }
+    </style>
+</head>
+
+<body>
+    <nav>
+        <a href="/citizen" class="logo">
+            <div class="logo-icon">🏛</div>
+            Akshaya Hub
+        </a>
+        <a href="/citizen" class="search-btn" style="text-decoration: none; display: flex; align-items: center; padding: 10px 20px;">Back to Home</a>
+    </nav>
+
+    <div class="container">
+        <div class="search-container">
+            <div style="font-size: 40px; margin-bottom: 20px;">🔍</div>
+            <h2>Track Your Token</h2>
+            <p style="color: var(--text-dim);">Enter your mobile number to view appointment status and payment options.</p>
+            
+            <form method="POST" class="search-form">
+                <input type="tel" name="mobile_number" placeholder="Enter 10-digit mobile number" 
+                       pattern="[0-9]{10}" maxlength="10" minlength="10" required 
+                       oninput="this.value = this.value.replace(/[^0-9]/g, '')"
+                       value="{{ request.form.mobile_number if request.form.mobile_number else '' }}">
+                <button type="submit" class="search-btn">Search Registry</button>
+            </form>
+        </div>
+
+        {% if searched %}
+        <div class="results-panel">
+            {% if tokens %}
+            <table>
+                <thead>
+                    <tr>
+                        <th>Token #</th>
+                        <th>Service & Centre</th>
+                        <th>Status</th>
+                        <th>Scheduled Visit</th>
+                        <th>Management</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for t in tokens %}
+                        {% if t[3] == 'IVR_Scheduled' %}
+                        <tr>
+                            <td colspan="5">
+                                <div style="background: rgba(99, 102, 241, 0.1); border: 1px solid var(--primary); border-radius: 20px; padding: 24px; margin: 10px 0; backdrop-filter: blur(10px);">
+                                    <div style="display: flex; align-items: center; gap: 12px; margin-bottom: 16px;">
+                                        <div style="font-size: 24px;">🔔</div>
+                                        <h3 style="color: var(--primary-light); font-size: 18px; font-weight: 800;">അറിയിപ്പ് (Notification)</h3>
+                                    </div>
+                                    <p style="font-size: 15px; color: #fff; line-height: 1.6;">പ്രിയപ്പെട്ട ഉപഭോക്താവ്, നിങ്ങളുടെ <strong>{{ t[1] }}</strong> സേവനത്തിനായുള്ള അപേക്ഷ സ്വീകരിച്ചിരിക്കുന്നു.</p>
+                                    
+                                    <div style="margin-top: 20px; display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 20px;">
+                                        <div>
+                                            <span style="color: var(--text-dim); font-size: 12px; text-transform: uppercase; letter-spacing: 1px;">ടോക്കൺ നമ്പർ (Token #)</span>
+                                            <div style="font-size: 20px; font-weight: 800; color: var(--primary-light); margin-top: 4px;">#{{ t[0] if t[0] else 'TBD' }}</div>
+                                        </div>
+                                        <div>
+                                            <span style="color: var(--text-dim); font-size: 12px; text-transform: uppercase; letter-spacing: 1px;">ഹാജരാകേണ്ട സമയം (Time)</span>
+                                            <div style="font-size: 20px; font-weight: 800; color: #fff; margin-top: 4px;">{{ t[6]|format_time_12h }}</div>
+                                            <div style="font-size: 12px; color: var(--text-dim);">തീയതി: {{ t[4] }}</div>
+                                        </div>
+                                        <div>
+                                            <span style="color: var(--text-dim); font-size: 12px; text-transform: uppercase; letter-spacing: 1px;">ഫീസ് (Fee)</span>
+                                            <div style="font-size: 20px; font-weight: 800; color: #fff; margin-top: 4px;">₹{{ t[8] }}</div>
+                                        </div>
+                                    </div>
+                                    
+                                    <div style="margin-top: 20px; padding-top: 15px; border-top: 1px solid rgba(255,255,255,0.05);">
+                                        <span style="color: var(--text-dim); font-size: 12px; text-transform: uppercase; letter-spacing: 1px;">ആവശ്യമായ രേഖകൾ (Required Documents)</span>
+                                        <div style="font-size: 14px; color: #e2e8f0; margin-top: 8px; line-height: 1.6;">
+                                            📌 {{ t[9] if t[9] else 'ആധാർ കാർഡ്' }}
+                                        </div>
+                                    </div>
+                                    
+                                    <div style="margin-top: 20px; padding-top: 15px; border-top: 1px solid rgba(255,255,255,0.05); display: flex; align-items: center; gap: 12px;">
+                                        {% if t[11] %}
+                                        <img src="{{ url_for('static', filename=t[11]) }}" alt="Staff" style="width: 40px; height: 40px; border-radius: 50%; object-fit: cover;">
+                                        {% else %}
+                                        <div style="width: 40px; height: 40px; background: #6366f1; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 20px; color: #fff;">👤</div>
+                                        {% endif %}
+                                        <div>
+                                            <span style="color: var(--text-dim); font-size: 11px; text-transform: uppercase; letter-spacing: 1px;">ടോക്കൺ നൽകിയ ജീവനക്കാരൻ (Issued By)</span>
+                                            <div style="font-size: 14px; font-weight: 700; color: #fff;">{{ t[10] if t[10] else 'System' }}</div>
+                                        </div>
+                                    </div>
+                                    
+                                    <div style="margin-top: 20px; padding: 12px 16px; background: rgba(250, 204, 21, 0.1); border-radius: 12px; font-size: 13px; color: #facc15; border: 1px solid rgba(250, 204, 21, 0.2);">
+                                        ⚠️ **ശ്രദ്ധിക്കുക**: ഈ ബുക്കിംഗിന് മുൻകൂർ പണമടയ്ക്കേണ്ടതില്ല. നിശ്ചയിച്ച സമയത്ത് രേഖകളും ഫീസുമായി സെന്ററിൽ എത്തുക.
+                                    </div>
+                                    
+                                    <div style="margin-top: 20px; text-align: center;">
+                                        <a href="/citizen/approve_time/{{ t[7] }}" style="background: #10b981; color: #020617; padding: 12px 30px; border-radius: 12px; font-weight: 800; text-decoration: none; display: inline-block; transition: 0.3s; box-shadow: 0 4px 12px rgba(16,185,129,0.3);">Confirm Booking</a>
+                                    </div>
+                                </div>
+                            </td>
+                        </tr>
+                        {% else %}
+                        <tr>
+                            <td data-label="Token #">
+                                {% if t[3] in ['Paid', 'Booked', 'Completed'] %}
+                                <span class="token-val">{{ t[0] }}</span>
+                                {% else %}
+                                <span style="color: var(--text-dim); font-size: 11px; font-weight: 700; text-transform: uppercase;">Awaiting Pay</span>
+                                {% endif %}
+                            </td>
+                            <td data-label="Service & Centre">
+                                <div class="service-name">{{ t[1] }}</div>
+                                <div class="centre-name">🏢 {{ t[2] }}</div>
+                            </td>
+                            <td data-label="Status">
+                                {% set status_class = t[3]|lower|replace(' ', '-') %}
+                                <span class="status-pill status-{{ status_class }}">
+                                    {{ 'Action Required' if t[3] == 'Scheduled' else 
+                                       'Ready for Payment' if t[3] == 'Payment Requested' else 
+                                       t[3] }}
+                                </span>
+                            </td>
+                            <td data-label="Scheduled Visit">
+                                {% if t[6] %}
+                                <div class="time-val">{{ t[6]|format_time_12h }}</div>
+                                <div style="font-size: 11px; color: var(--text-dim);">{{ t[4] }}</div>
+                                {% else %}
+                                <span style="color: var(--text-dim);">TBD</span>
+                                {% endif %}
+                            </td>
+                            <td data-label="Management">
+                                <div class="action-btns">
+                                    {% if t[3] == 'Scheduled' %}
+                                        <a href="/citizen/approve_time/{{ t[7] }}" class="btn-mini btn-approve">Approve Time</a>
+                                        <a href="/citizen/reject_time/{{ t[7] }}" class="btn-mini btn-reject">Reject</a>
+                                    {% elif t[3] == 'Payment Requested' or t[3] == 'TimeApproved' %}
+                                        {% if t[3] == 'Payment Requested' %}
+                                        <a href="/citizen/payment/{{ t[7] }}" class="btn-mini btn-pay">Proceed to Payment 💳</a>
+                                        {% else %}
+                                        <span style="color: var(--primary-light); font-size: 12px; font-style: italic;">Awaiting Staff Prompt...</span>
+                                        {% endif %}
+                                    {% elif t[3] == 'Pending' %}
+                                        <span style="color: var(--text-dim); font-size: 12px; font-style: italic;">Queueing...</span>
+                                    {% elif t[3] == 'Cancelled' %}
+                                        <span style="color: #f43f5e; font-size: 12px;">Rejected</span>
+                                    {% elif t[3] == 'Completed' %}
+                                        {% if t[12] %}
+                                            <div style="color: #facc15; font-size: 14px;">{{ '⭐' * t[12] }}</div>
+                                            <div style="font-size: 11px; color: var(--text-dim); margin-top: 4px;">{{ t[13] if t[13] else '' }}</div>
+                                        {% else %}
+                                            <form method="POST" action="/citizen/add_review/{{ t[7] }}" style="display:flex; flex-direction:column; gap:6px; background: rgba(255,255,255,0.02); padding: 8px; border-radius: 8px;">
+                                                <select name="rating" required style="background: rgba(0,0,0,0.2); color: #fff; border: 1px solid rgba(255,255,255,0.1); border-radius: 4px; padding: 2px; font-size: 11px;">
+                                                    <option value="5">⭐⭐⭐⭐⭐</option>
+                                                    <option value="4">⭐⭐⭐⭐</option>
+                                                    <option value="3">⭐⭐⭐</option>
+                                                    <option value="2">⭐⭐</option>
+                                                    <option value="1">⭐</option>
+                                                </select>
+                                                <input type="text" name="review" placeholder="Review (Optional)" style="background: rgba(0,0,0,0.2); color: #fff; border: 1px solid rgba(255,255,255,0.1); border-radius: 4px; padding: 2px 4px; font-size: 11px;">
+                                                <button type="submit" class="btn-mini btn-approve" style="padding: 2px 6px; font-size: 10px; width: 100%;">Submit</button>
+                                            </form>
+                                        {% endif %}
+                                    {% else %}
+                                        <span style="color: #10b981; font-weight: 700; font-size: 13px;">Confirmed ✓</span>
+                                        {% endif %}
+                                </div>
+                            </td>
+                        </tr>
+                        {% endif %}
+                    {% endfor %}
+                </tbody>
+            </table>
+            {% else %}
+            <div class="empty-results">
+                <div style="font-size: 48px; margin-bottom: 20px; opacity: 0.2;">📭</div>
+                <h3>No tokens found</h3>
+                <p>We couldn't find any service records for this mobile number.</p>
+                <a href="/citizen" style="color: var(--primary-light); text-decoration: none; display: inline-block; margin-top: 20px; font-weight: 700;">Book Your First Token →</a>
+            </div>
+            {% endif %}
+        </div>
+        {% endif %}
+    </div>
+</body>
+
+</html>

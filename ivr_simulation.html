@@ -1,0 +1,428 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>IVR Simulation | Akshaya Hub</title>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #6366f1;
+            --primary-light: #818cf8;
+            --secondary: #06b6d4;
+            --bg: #030712;
+            --phone-bg: #0f172a;
+            --glass: rgba(15, 23, 42, 0.8);
+            --text-main: #f8f9fa;
+            --text-dim: #94a3b8;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Outfit', sans-serif;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        body {
+            background: var(--bg);
+            color: var(--text-main);
+            height: 100vh;
+            width: 100vw;
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .phone-wrapper {
+            position: fixed;
+            top: 0; left: 0; right: 0; bottom: 0;
+            width: 100%;
+            height: 100%;
+            background: var(--phone-bg);
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+
+        .screen {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            padding: 10px 15px;
+            background: linear-gradient(to bottom, #0f172a, #020617);
+        }
+
+        .status-bar {
+            display: flex;
+            justify-content: space-between;
+            font-size: 11px;
+            color: var(--text-dim);
+            font-weight: 600;
+            margin-bottom: 10px;
+        }
+
+        .call-header {
+            text-align: center;
+            margin-bottom: 5px;
+        }
+
+        .avatar-box {
+            width: 50px;
+            height: 50px;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            border-radius: 50%;
+            margin: 0 auto 5px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+            box-shadow: 0 10px 20px rgba(99, 102, 241, 0.3);
+            border: 2px solid rgba(255,255,255,0.1);
+        }
+
+        .caller-name {
+            font-size: 18px;
+            font-weight: 700;
+            margin-bottom: 2px;
+        }
+
+        .call-timer {
+            font-size: 13px;
+            color: #10b981;
+            font-weight: 600;
+            letter-spacing: 1px;
+        }
+
+        .ivr-display {
+            background: rgba(0, 0, 0, 0.4);
+            border: 1px solid rgba(255,255,255,0.1);
+            border-radius: 12px;
+            padding: 12px;
+            flex: 1;
+            margin: 10px 0;
+            font-family: 'Courier New', monospace;
+            font-size: 13px;
+            line-height: 1.4;
+            color: var(--secondary);
+            overflow-y: auto;
+            position: relative;
+        }
+
+        .cursor {
+            display: inline-block;
+            width: 8px;
+            height: 14px;
+            background: var(--secondary);
+            animation: blink 1s infinite;
+            vertical-align: middle;
+        }
+
+        @keyframes blink { 0%, 100% { opacity: 1; } 50% { opacity: 0; } }
+
+        .dialpad {
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            gap: 6px;
+            padding: 5px 10px;
+            max-height: 220px; /* Leave room for A-Z */
+        }
+
+        .digit-key {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255,255,255,0.05);
+            height: 40px;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: 0.1s;
+        }
+
+        .digit-key:active { background: var(--primary); color: #fff; transform: scale(0.95); }
+
+        .digit-key .num { font-size: 18px; font-weight: 600; }
+
+        .call-actions {
+            display: flex;
+            justify-content: center;
+            gap: 30px;
+            padding: 10px 0 15px 0;
+        }
+
+        .action-btn {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: 0.3s;
+            font-size: 20px;
+        }
+
+        .btn-stop { background: #facc15; color: #000; }
+        .btn-end { background: #ef4444; color: #fff; transform: rotate(135deg); }
+
+        .notif-bubble {
+            position: absolute;
+            top: 30px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: #10b981;
+            color: #fff;
+            padding: 10px 20px;
+            border-radius: 100px;
+            font-size: 13px;
+            font-weight: 700;
+            display: none;
+            z-index: 200;
+            box-shadow: 0 10px 20px rgba(16, 185, 129, 0.3);
+            animation: slideDown 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+
+        @keyframes slideDown { from { transform: translate(-50%, -20px); opacity: 0; } to { transform: translate(-50%, 0); opacity: 1; } }
+    </style>
+</head>
+
+<body>
+    <!-- Hidden audio element for much better mobile support -->
+    <audio id="audio-player" style="display:none;"></audio>
+
+    <div id="start-overlay" style="position:fixed; inset:0; background:var(--bg); z-index:5000; display:flex; flex-direction:column; align-items:center; justify-content:center;">
+        <div style="font-size:64px; margin-bottom:20px; animation: pulse 2s infinite;">📞</div>
+        <h2 style="margin-bottom:30px; font-weight:800;">Call Ready</h2>
+        <button onclick="startCallSession()" style="padding:16px 32px; font-size:16px; font-weight:700; background:var(--primary); color:#fff; border:none; border-radius:100px; box-shadow:0 10px 20px rgba(99,102,241,0.4); cursor:pointer;">
+            Tap to Start Call
+        </button>
+    </div>
+
+    <div class="phone-wrapper">
+        <div class="notif-bubble" id="notif">Request Sent Successfully!</div>
+        <div class="screen">
+            <div class="status-bar">
+                <span>Akshaya Net</span>
+                <span id="live-clock">00:00</span>
+                <span>🔋 98%</span>
+            </div>
+
+            <div class="call-header">
+                <div class="avatar-box">🎧</div>
+                <div class="caller-name">Digital Support IVR</div>
+                <div style="font-size: 12px; color: var(--text-dim); margin-bottom: 5px;">Calling: {{ user_name }} (+91 {{ user_phone }})</div>
+                <div class="call-timer" id="call-timer">00:00</div>
+            </div>
+
+            <div class="ivr-display" id="ivr-display">
+                <div id="ivr-text">
+                    <span style="color: var(--text-dim);">[Connecting to Support...]</span><br><br>
+                    അക്ഷയ സെന്ററിലേക്ക് സ്വാഗതം.<br>
+                    (Welcome to Akshaya Centre)<br><br>
+                    Press A for Malayalam.<br>
+                    Press B for English.
+                </div>
+                <span class="cursor"></span>
+            </div>
+
+            <!-- Javascript will inject A-Z buttons here -->
+            <div class="dialpad" id="alpha-pad"></div>
+
+            <div class="call-actions">
+                <div class="action-btn btn-stop" onclick="stopAudio()" title="Stop Audio">⏹</div>
+                <div class="action-btn btn-end" onclick="stopCall()" title="End Call">📞</div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let step = 'lang';
+        let centreId = null;
+        let serviceId = null;
+        let selectedLang = 'en';
+        
+        const citizenName = "{{ user_name }}";
+        const citizenPhone = "{{ user_phone }}";
+        const ivrCentres = {{ centres | tojson }};
+        let services = [];
+
+        const display = document.getElementById('ivr-text');
+        const audioPlayer = document.getElementById('audio-player');
+
+        // Populate the dialpad with A-Z
+        window.addEventListener('DOMContentLoaded', () => {
+            const alphaPad = document.getElementById('alpha-pad');
+            for (let i = 65; i <= 90; i++) { // 65 is A, 90 is Z
+                let letter = String.fromCharCode(i);
+                alphaPad.innerHTML += `<div class="digit-key" onclick="press('${letter}')"><span class="num">${letter}</span></div>`;
+            }
+        });
+
+        function speak(text, lang) {
+            stopAudio();
+            try {
+                const ttsLang = lang === 'ml' ? 'ml' : 'en';
+                const url = `/api/ivr/tts?text=${encodeURIComponent(text)}&lang=${ttsLang}`;
+                audioPlayer.src = url;
+                audioPlayer.play().catch(e => {
+                    console.log("Audio play blocked. Ensure media volume is up.", e);
+                });
+            } catch (e) {
+                console.log("Audio failed", e);
+            }
+        }
+
+        function stopAudio() {
+            audioPlayer.pause();
+            audioPlayer.currentTime = 0;
+        }
+
+        function updateDisplay(htmlText, voiceText, lang) {
+            display.innerHTML = htmlText.replace(/\n/g, '<br>');
+            const container = document.getElementById('ivr-display');
+            container.scrollTop = container.scrollHeight;
+            if (voiceText) speak(voiceText, lang);
+        }
+
+        function stopCall() { stopAudio(); location.href = '/citizen'; }
+
+        let timerInterval;
+
+        window.onload = () => {
+             const now = new Date();
+             document.getElementById('live-clock').innerText = now.getHours().toString().padStart(2, '0') + ":" + now.getMinutes().toString().padStart(2, '0');
+        };
+
+        function startCallSession() {
+             document.getElementById('start-overlay').style.display = 'none';
+             
+             // Unlock audio context by playing an empty sound
+             audioPlayer.src = "data:audio/wav;base64,UklGRigAAABXQVZFZm10IBIAAAABAAEARKwAAIhYAQACABAAAABkYXRhAgAAAAEA";
+             audioPlayer.play().catch(e => {});
+
+             setTimeout(() => {
+                 if (step === 'lang') {
+                    updateDisplay(
+                        "അക്ഷയ സെന്ററിലേക്ക് സ്വാഗതം.<br>(Welcome to Akshaya Centre)<br><br>Press A for Malayalam.<br>Press B for English.",
+                        "Welcome to Akshaya Centre Automation. Press A for Malayalam. Press B for English.",
+                        "en"
+                    );
+                 }
+             }, 300);
+
+             let seconds = 0;
+             timerInterval = setInterval(() => {
+                 seconds++;
+                 let m = Math.floor(seconds / 60).toString().padStart(2, '0');
+                 let s = (seconds % 60).toString().padStart(2, '0');
+                 document.getElementById('call-timer').innerText = `${m}:${s}`;
+             }, 1000);
+        }
+
+        async function press(key) {
+            if (step === 'finished') return;
+
+            // Show what they typed
+            const currentText = display.innerHTML.replace(/<br><br><span style="color:#fff; background:var(--primary).*$/, "");
+            display.innerHTML = currentText + `<br><br><span style="color:#fff; background:var(--primary); padding:2px 8px; border-radius:4px;">You pressed: ${key}</span>`;
+            document.getElementById('ivr-display').scrollTop = document.getElementById('ivr-display').scrollHeight;
+
+            if (step === 'lang') {
+                if (key === 'A') {
+                    selectedLang = 'ml'; step = 'centre';
+                    let list = ivrCentres.map((c, i) => `[${String.fromCharCode(65 + i)}] ${c[1]}`).join('\n');
+                    let readList = ivrCentres.map((c, i) => `പ്രസ്സ് ${String.fromCharCode(65 + i)}, ഫോർ ${c[1]}.`).join(' ');
+                    updateDisplay(
+                        "മലയാളം തിരഞ്ഞെടുത്തിരിക്കുന്നു\n\n" + list, 
+                        "മലയാളം തിരഞ്ഞെടുത്തിരിക്കുന്നു. നിങ്ങളുടെ അക്ഷയ സെന്റർ തിരഞ്ഞെടുക്കുക. " + readList,
+                        "ml"
+                    );
+                } else if (key === 'B') {
+                    selectedLang = 'en'; step = 'centre';
+                    let list = ivrCentres.map((c, i) => `[${String.fromCharCode(65 + i)}] ${c[1]}`).join('\n');
+                    let readList = ivrCentres.map((c, i) => `Press ${String.fromCharCode(65 + i)}, for ${c[1]}.`).join(' ');
+                    updateDisplay(
+                        "English Selected\n\n" + list, 
+                        "English selected. Please select your preferred Akshaya Centre. " + readList,
+                        "en"
+                    );
+                }
+            } else if (step === 'centre') {
+                // A is 65, so keycharCodeAt(0) - 65 gives index 0 for A, 1 for B, etc.
+                let idx = key.charCodeAt(0) - 65; 
+                
+                if (ivrCentres[idx]) {
+                    centreId = ivrCentres[idx][0];
+                    const centreName = ivrCentres[idx][1];
+                    
+                    let fetchHtml = selectedLang === 'ml' ? "സേവനങ്ങൾ ലഭ്യമാക്കുന്നു... കാത്തിരിക്കുക." : "Fetching services... Please wait.";
+                    let fetchVoice = selectedLang === 'ml' ? "സേവനങ്ങൾ ലഭ്യമാക്കുന്നു ദയവായി കാത്തിരിക്കുക" : "Fetching services. Please wait.";
+                    updateDisplay(fetchHtml, fetchVoice, selectedLang);
+                    
+                    try {
+                        const resp = await fetch(`/api/ivr/Services/${centreId}`);
+                        const data = await resp.json();
+                        services = data.Services;
+                        step = 'service';
+                        
+                        let list = services.map((s, i) => `[${String.fromCharCode(65 + i)}] ${s.name}`).join('\n');
+                        let header = selectedLang === 'ml' ? `${centreName}-ൽ ലഭ്യമായ സേവനങ്ങൾ:` : `Available Services at ${centreName}:`;
+                        
+                        let readList = selectedLang === 'ml' 
+                            ? services.map((s, i) => `പ്രസ്സ് ${String.fromCharCode(65 + i)}, ഫോർ ${s.name}.`).join(' ')
+                            : services.map((s, i) => `Press ${String.fromCharCode(65 + i)}, for ${s.name}.`).join(' ');
+                            
+                        let voiceInstruct = selectedLang === 'ml' 
+                            ? `${centreName}-ൽ ലഭ്യമായ സേവനങ്ങൾ: സ്ക്രീനിൽ നോക്കി നിങ്ങളുടെ സേവനത്തിനുള്ള അക്ഷരം അമർത്തുക. ${readList}` 
+                            : `Available Services at ${centreName}: Please select the service. ${readList}`;
+                            
+                        updateDisplay(`${header}\n\n${list}`, voiceInstruct, selectedLang);
+                    } catch (e) { 
+                        updateDisplay("Error fetching services.", "Error fetching services", 'en'); 
+                        step = 'finished'; 
+                    }
+                } else {
+                    let errMsg = selectedLang === 'ml' ? "തെറ്റായ അക്ഷരം. വീണ്ടും ശ്രമിക്കുക." : "Invalid Letter. Try again.";
+                    updateDisplay(`Invalid!\n\n${errMsg}`, errMsg, selectedLang);
+                }
+            } else if (step === 'service') {
+                let idx = key.charCodeAt(0) - 65; 
+                
+                if (services[idx]) {
+                    serviceId = services[idx].id;
+                    let bookHtml = selectedLang === 'ml' ? `ബുക്കിംഗ് ആരംഭിച്ചു...\n\nഹോൾഡ് ചെയ്യുക.` : `Booking Process Started...\n\nPlease hold the line.`;
+                    let bookVoice = selectedLang === 'ml' ? "ബുക്കിംഗ് പ്രക്രിയ ആരംഭിച്ചു. ദയവായി ഹോൾഡ് ചെയ്യുക." : "Booking Process Started. Please hold the line.";
+                    
+                    updateDisplay(bookHtml, bookVoice, selectedLang);
+                    
+                    try {
+                        await fetch('/api/ivr/book', {
+                            method: 'POST',
+                            headers: { 'Content-Type': 'application/json' },
+                            body: JSON.stringify({ name: citizenName, mobile: citizenPhone, centre_id: centreId, service_id: serviceId })
+                        });
+                        setTimeout(() => {
+                            let succHtml = selectedLang === 'ml' ? "വിജയിച്ചു! വിളിച്ചതിന് നന്ദി." : "SUCCESS! Thank you for calling.";
+                            let succVoice = selectedLang === 'ml' ? "നിങ്ങളുടെ അപേക്ഷ അയച്ചിട്ടുണ്ട്. അക്ഷയ വിളിച്ചതിന് നന്ദി. ഗുഡ് ബൈ." : "Success! Thank you for calling Akshaya. Goodbye.";
+                            
+                            updateDisplay(succHtml, succVoice, selectedLang);
+                            document.getElementById('notif').style.display = 'block';
+                            step = 'finished';
+                        }, 2000);
+                    } catch (e) { 
+                        updateDisplay("Booking failed.", "Booking failed", 'en'); 
+                        step = 'finished'; 
+                    }
+                } else {
+                    let errMsg = selectedLang === 'ml' ? "തെറ്റായ അക്ഷരം. വീണ്ടും ശ്രമിക്കുക." : "Invalid Service Letter. Try again.";
+                    updateDisplay(`Invalid!\n\n${errMsg}`, errMsg, selectedLang);
+                }
+            }
+        }
+    </script>
+</body>
+</html>

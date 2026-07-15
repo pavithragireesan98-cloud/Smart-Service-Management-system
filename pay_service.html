@@ -1,0 +1,250 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Complete Payment | Akshaya Hub</title>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&display=swap"
+        rel="stylesheet">
+    <style>
+        :root {
+            --primary: #6366f1;
+            --primary-light: #818cf8;
+            --secondary: #06b6d4;
+            --bg: #030712;
+            --card-bg: rgba(255, 255, 255, 0.03);
+            --card-border: rgba(255, 255, 255, 0.1);
+            --text-main: #f8f9fa;
+            --text-dim: #94a3b8;
+            --glass: rgba(15, 23, 42, 0.7);
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Outfit', sans-serif;
+        }
+
+        body {
+            background: var(--bg);
+            color: var(--text-main);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background-image:
+                radial-gradient(circle at 0% 0%, rgba(99, 102, 241, 0.1) 0%, transparent 40%),
+                radial-gradient(circle at 100% 100%, rgba(6, 182, 212, 0.1) 0%, transparent 40%);
+            padding: 20px;
+        }
+
+        .payment-card {
+            background: var(--glass);
+            backdrop-filter: blur(20px);
+            border: 1px solid var(--card-border);
+            border-radius: 32px;
+            width: 100%;
+            max-width: 450px;
+            padding: 40px;
+            box-shadow: 0 40px 100px rgba(0, 0, 0, 0.3);
+            text-align: center;
+            animation: slideUp 0.6s ease-out;
+        }
+
+        @keyframes slideUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .icon-header {
+            font-size: 48px;
+            margin-bottom: 20px;
+        }
+
+        h1 {
+            font-size: 28px;
+            font-weight: 800;
+            margin-bottom: 8px;
+            background: linear-gradient(to right, #fff, var(--text-dim));
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .service-info {
+            color: var(--text-dim);
+            font-size: 15px;
+            margin-bottom: 32px;
+        }
+
+        .amount-display {
+            background: rgba(99, 102, 241, 0.1);
+            border: 1px solid rgba(99, 102, 241, 0.2);
+            border-radius: 20px;
+            padding: 24px;
+            margin-bottom: 32px;
+        }
+
+        .amount-label {
+            font-size: 12px;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            color: var(--primary-light);
+            font-weight: 700;
+            margin-bottom: 8px;
+        }
+
+        .amount-value {
+            font-size: 42px;
+            font-weight: 800;
+            color: #fff;
+        }
+
+        .method-title {
+            text-align: left;
+            font-size: 12px;
+            font-weight: 700;
+            color: var(--text-dim);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 12px;
+        }
+
+        .methods-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+            margin-bottom: 32px;
+        }
+
+        .method-option {
+            background: rgba(255, 255, 255, 0.02);
+            border: 1px solid var(--card-border);
+            border-radius: 16px;
+            padding: 16px;
+            cursor: pointer;
+            transition: 0.3s;
+            position: relative;
+        }
+
+        .method-option input {
+            position: absolute;
+            opacity: 0;
+        }
+
+        .method-option:hover {
+            background: rgba(255, 255, 255, 0.05);
+            border-color: var(--primary);
+        }
+
+        .method-option.selected {
+            background: rgba(99, 102, 241, 0.1);
+            border-color: var(--primary);
+            box-shadow: 0 0 20px rgba(99, 102, 241, 0.2);
+        }
+
+        .method-icon {
+            font-size: 24px;
+            margin-bottom: 8px;
+            display: block;
+        }
+
+        .method-label {
+            font-size: 13px;
+            font-weight: 600;
+            color: #fff;
+        }
+
+        .btn-pay {
+            width: 100%;
+            padding: 18px;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            border: none;
+            border-radius: 16px;
+            color: #fff;
+            font-size: 16px;
+            font-weight: 800;
+            cursor: pointer;
+            transition: 0.3s;
+            box-shadow: 0 10px 20px rgba(99, 102, 241, 0.2);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+
+        .btn-pay:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 15px 30px rgba(99, 102, 241, 0.4);
+        }
+
+        .secure-badge {
+            margin-top: 24px;
+            font-size: 12px;
+            color: var(--text-dim);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="payment-card">
+        <div class="icon-header">💳</div>
+        <h1>Complete Payment</h1>
+        <p class="service-info">{{ token[1] }} – 🏛 {{ token[3] }}</p>
+
+        <div class="amount-display">
+            <div class="amount-label">Amount to Pay</div>
+            <div class="amount-value">₹{{ token[2] }}</div>
+        </div>
+
+        <form action="/citizen/initiate_payment/{{ token_id }}" method="POST">
+            <input type="hidden" name="amount" value="{{ token[2] }}">
+
+            <div class="method-title">Select Payment Method</div>
+            <div class="methods-grid">
+                <label class="method-option selected" onclick="selectMethod(this)">
+                    <input type="radio" name="payment_method" value="UPI" checked>
+                    <span class="method-icon">📱</span>
+                    <span class="method-label">UPI / QR</span>
+                </label>
+                <label class="method-option" onclick="selectMethod(this)">
+                    <input type="radio" name="payment_method" value="Card">
+                    <span class="method-icon">💳</span>
+                    <span class="method-label">Card / Net</span>
+                </label>
+            </div>
+
+            <button type="submit" class="btn-pay">
+                Proceed to Secure Pay
+                <span>→</span>
+            </button>
+        </form>
+
+        <div class="secure-badge">
+            <span>🔒</span>
+            100% Secure Transaction via Razorpay
+        </div>
+    </div>
+
+    <script>
+        function selectMethod(el) {
+            document.querySelectorAll('.method-option').forEach(opt => opt.classList.remove('selected'));
+            el.classList.add('selected');
+        }
+    </script>
+</body>
+
+</html>

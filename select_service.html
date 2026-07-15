@@ -1,0 +1,314 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Available Services | {{ centre[1] }}</title>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #6366f1;
+            --primary-light: #818cf8;
+            --secondary: #06b6d4;
+            --bg: #030712;
+            --card-bg: rgba(255, 255, 255, 0.03);
+            --card-hover: rgba(255, 255, 255, 0.06);
+            --card-border: rgba(255, 255, 255, 0.1);
+            --text-main: #f8f9fa;
+            --text-dim: #94a3b8;
+            --glass: rgba(15, 23, 42, 0.7);
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Outfit', sans-serif;
+        }
+
+        body {
+            background: var(--bg);
+            color: var(--text-main);
+            min-height: 100vh;
+            background-image: 
+                radial-gradient(circle at 0% 0%, rgba(99, 102, 241, 0.1) 0%, transparent 40%),
+                radial-gradient(circle at 100% 100%, rgba(6, 182, 212, 0.1) 0%, transparent 40%);
+        }
+
+        /* Navbar */
+        nav {
+            position: sticky;
+            top: 0;
+            width: 100%;
+            padding: 20px 5%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: rgba(3, 7, 18, 0.8);
+            backdrop-filter: blur(20px);
+            border-bottom: 1px solid var(--card-border);
+            z-index: 1000;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-size: 20px;
+            font-weight: 800;
+            color: #fff;
+            text-decoration: none;
+        }
+
+        .logo-icon {
+            width: 36px;
+            height: 36px;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 18px;
+        }
+
+        .back-btn {
+            padding: 10px 20px;
+            border-radius: 12px;
+            text-decoration: none;
+            font-size: 14px;
+            font-weight: 600;
+            border: 1px solid var(--card-border);
+            color: var(--text-main);
+            background: var(--card-bg);
+            transition: 0.3s;
+        }
+
+        .back-btn:hover {
+            background: rgba(255,255,255,0.1);
+            border-color: var(--primary);
+        }
+
+        .container {
+            max-width: 1000px;
+            margin: 60px auto;
+            padding: 0 5%;
+        }
+
+        .centre-header {
+            background: var(--glass);
+            padding: 40px;
+            border-radius: 32px;
+            border: 1px solid var(--card-border);
+            margin-bottom: 40px;
+            backdrop-filter: blur(20px);
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-end;
+        }
+
+        .centre-header h2 {
+            font-size: 32px;
+            font-weight: 800;
+            margin-bottom: 10px;
+            background: linear-gradient(to right, #fff, var(--text-dim));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .centre-header .meta {
+            color: var(--text-dim);
+            font-size: 15px;
+            display: flex;
+            gap: 20px;
+        }
+
+        .service-list {
+            display: grid;
+            gap: 20px;
+        }
+
+        .service-card {
+            background: var(--card-bg);
+            border: 1px solid var(--card-border);
+            border-radius: 28px;
+            padding: 32px;
+            display: grid;
+            grid-template-columns: 1fr auto;
+            align-items: center;
+            gap: 30px;
+            transition: 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .service-card:hover {
+            background: var(--card-hover);
+            border-color: rgba(255,255,255,0.2);
+            transform: translateY(-5px);
+            box-shadow: 0 20px 40px rgba(0,0,0,0.3);
+        }
+
+        .service-card::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 0;
+            width: 6px;
+            height: 100%;
+            background: var(--primary);
+            opacity: 0.3;
+        }
+
+        .service-card:hover::before {
+            opacity: 1;
+        }
+
+        .service-info h3 {
+            font-size: 22px;
+            font-weight: 700;
+            margin-bottom: 8px;
+            color: #fff;
+        }
+
+        .service-info .desc {
+            font-size: 14px;
+            color: var(--text-dim);
+            margin-bottom: 16px;
+            line-height: 1.6;
+            max-width: 500px;
+        }
+
+        .fee-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            background: rgba(99, 102, 241, 0.1);
+            color: var(--primary-light);
+            padding: 6px 14px;
+            border-radius: 100px;
+            font-size: 13px;
+            font-weight: 700;
+            border: 1px solid rgba(99, 102, 241, 0.2);
+        }
+
+        .actions {
+            display: flex;
+            gap: 12px;
+        }
+
+        .btn-action {
+            padding: 14px 24px;
+            border-radius: 16px;
+            font-size: 14px;
+            font-weight: 700;
+            text-decoration: none;
+            transition: 0.3s;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .btn-docs {
+            background: rgba(255,255,255,0.05);
+            color: #fff;
+            border: 1px solid var(--card-border);
+        }
+
+        .btn-docs:hover {
+            background: rgba(255,255,255,0.1);
+        }
+
+        .btn-book {
+            background: var(--primary);
+            color: #fff;
+            box-shadow: 0 10px 20px rgba(99, 102, 241, 0.2);
+        }
+
+        .btn-book:hover {
+            background: var(--primary-light);
+            box-shadow: 0 15px 30px rgba(99, 102, 241, 0.4);
+            transform: translateY(-2px);
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 80px;
+            background: var(--card-bg);
+            border-radius: 32px;
+            border: 1px dashed var(--card-border);
+        }
+
+        @media (max-width: 800px) {
+            .service-card { grid-template-columns: 1fr; }
+            .centre-header { flex-direction: column; align-items: flex-start; gap: 20px; }
+        }
+
+        @media (max-width: 600px) {
+            .container { padding: 0 15px; margin: 30px auto; }
+            .centre-header { padding: 24px; border-radius: 20px; }
+            .centre-header h2 { font-size: 24px; }
+            .service-card { padding: 24px; border-radius: 20px; }
+            .service-info h3 { font-size: 18px; }
+            .actions { flex-direction: column; width: 100%; }
+            .btn-action { justify-content: center; width: 100%; }
+        }
+    </style>
+</head>
+
+<body>
+    <nav>
+        <a href="/citizen" class="logo">
+            <div class="logo-icon">🏛</div>
+            Akshaya Hub
+        </a>
+        <a href="/citizen" class="back-btn">← Dashboard</a>
+    </nav>
+
+    <div class="container">
+        <div class="centre-header">
+            <div>
+                <div style="font-size: 12px; font-weight: 800; color: var(--primary-light); text-transform: uppercase; letter-spacing: 2px; margin-bottom: 8px;">Select Service</div>
+                <h2>{{ centre[1] }}</h2>
+                <div class="meta">
+                    <span>📍 {{ centre[2] }}</span>
+                    <span>📞 {{ centre[3] }}</span>
+                </div>
+            </div>
+            <div style="text-align: right;">
+                <div style="font-size: 12px; color: var(--text-dim); margin-bottom: 5px;">Active Services</div>
+                <div style="font-size: 24px; font-weight: 800;">{{ services|length }}</div>
+            </div>
+        </div>
+
+        <div class="service-list">
+            {% if services %}
+                {% for s in services %}
+                <div class="service-card">
+                    <div class="service-info">
+                        <h3>{{ s[1] }}</h3>
+                        <p class="desc">{{ s[3] if s[3] else 'Official government digital service provided via Akshaya network.' }}</p>
+                        <div class="fee-badge">
+                            <span style="font-size: 16px;">💰</span> ₹{{ s[2] }} Service Fee
+                        </div>
+                    </div>
+                    <div class="actions">
+                        <a href="/citizen/book/{{ s[0] }}?centre_id={{ centre[0] }}" class="btn-action btn-book">
+                            Book Token
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>
+                        </a>
+                    </div>
+                </div>
+                {% endfor %}
+            {% else %}
+                <div class="empty-state">
+                    <div style="font-size: 64px; margin-bottom: 24px; opacity: 0.2;">📂</div>
+                    <h3 style="color: #fff; margin-bottom: 10px;">No active services</h3>
+                    <p style="color: var(--text-dim);">This centre currently has no digital services listed.</p>
+                </div>
+            {% endif %}
+        </div>
+    </div>
+</body>
+
+</html>

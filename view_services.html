@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>View Services | Admin</title>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #6366f1;
+            --bg: #05050a;
+            --card-bg: rgba(255, 255, 255, 0.03);
+            --card-border: rgba(255, 255, 255, 0.08);
+            --text-main: #f8f9fa;
+            --text-dim: #94a3b8;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Outfit', sans-serif;
+        }
+
+        body {
+            background: var(--bg);
+            color: var(--text-main);
+            min-height: 100vh;
+            background-image: radial-gradient(at 100% 0%, rgba(99, 102, 241, 0.05) 0px, transparent 50%);
+        }
+
+        header {
+            background: rgba(5, 5, 10, 0.8);
+            backdrop-filter: blur(10px);
+            padding: 20px 60px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid var(--card-border);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        header h1 {
+            font-size: 20px;
+            font-weight: 800;
+            background: linear-gradient(to right, #fff, #6366f1);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        header a {
+            color: #fff;
+            text-decoration: none;
+            background: rgba(255, 255, 255, 0.05);
+            padding: 8px 20px;
+            border-radius: 30px;
+            font-size: 13px;
+            font-weight: 600;
+            border: 1px solid var(--card-border);
+            transition: 0.3s;
+        }
+
+        header a:hover {
+            background: rgba(99, 102, 241, 0.2);
+            border-color: var(--primary);
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 60px auto;
+            padding: 0 40px;
+        }
+
+        .top-bar {
+            margin-bottom: 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .top-bar h2 {
+            font-size: 28px;
+            font-weight: 800;
+        }
+
+        .table-wrapper {
+            background: var(--card-bg);
+            border: 1px solid var(--card-border);
+            border-radius: 24px;
+            overflow: hidden;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            text-align: left;
+        }
+
+        thead th {
+            background: rgba(255, 255, 255, 0.02);
+            padding: 20px 24px;
+            font-size: 11px;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            color: var(--text-dim);
+            border-bottom: 1px solid var(--card-border);
+        }
+
+        tbody td {
+            padding: 24px;
+            font-size: 14px;
+            border-bottom: 1px solid var(--card-border);
+            transition: 0.3s;
+        }
+
+        tbody tr:last-child td {
+            border-bottom: none;
+        }
+
+        tbody tr:hover td {
+            background: rgba(99, 102, 241, 0.04);
+            color: #fff;
+        }
+
+        .badge-id {
+            background: rgba(255, 255, 255, 0.05);
+            padding: 5px 12px;
+            border-radius: 10px;
+            font-size: 12px;
+            font-weight: 700;
+            color: var(--text-dim);
+        }
+
+        .service-name {
+            font-weight: 700;
+            color: #fff;
+            font-size: 17px;
+        }
+
+        .fee-tag {
+            font-weight: 800;
+            color: #34d399;
+            font-size: 18px;
+        }
+
+        .centre-tag {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            color: var(--text-main);
+            background: rgba(255, 255, 255, 0.05);
+            padding: 6px 14px;
+            border-radius: 12px;
+            border: 1px solid var(--card-border);
+            font-weight: 600;
+        }
+
+        @media (max-width: 768px) {
+            header { padding: 20px; }
+            .container { padding: 0 20px; }
+            .top-bar h2 { font-size: 22px; }
+        }
+    </style>
+</head>
+
+<body>
+    <header>
+        <h1>Akshaya Digital Gateway</h1>
+        <a href="/admin">← Back to Dashboard</a>
+    </header>
+    <div class="container">
+        <div class="top-bar">
+            <h2>View Services</h2>
+            <form method="GET" action="/view_services" style="display: flex; gap: 10px; align-items: center;">
+                <select name="centre_id" onchange="this.form.submit()" style="background: #0f0f1a; color: #fff; border: 1px solid var(--card-border); padding: 10px 15px; border-radius: 12px; font-size: 14px; outline: none; cursor: pointer;">
+                    <option value="">All Centres</option>
+                    {% for c in centres %}
+                    <option value="{{ c[0] }}" {% if selected_centre|string == c[0]|string %}selected{% endif %}>{{ c[1] }}</option>
+                    {% endfor %}
+                </select>
+            </form>
+        </div>
+        
+        <div class="table-wrapper">
+            <table>
+                <thead>
+                    <tr>
+                        <th width="100">Index</th>
+                        <th>Service Definition</th>
+                        <th>Official Fee</th>
+                        <th>Hosting Centre</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for s in Services %}
+                    <tr>
+                        <td><span class="badge-id">#{{ loop.index }}</span></td>
+                        <td>
+                            <div class="service-name">{{ s[1] }}</div>
+                            <div style="font-size: 11px; color: var(--text-dim); margin-top: 5px; text-transform: uppercase;">Public Utility Service</div>
+                        </td>
+                        <td>
+                            <div class="fee-tag">₹{{ s[2] }}</div>
+                        </td>
+                        <td>
+                            <div class="centre-tag">🏢 {{ s[4] }}</div>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                    {% if not Services %}
+                    <tr>
+                        <td colspan="4" style="text-align: center; padding: 100px 20px;">
+                            <div style="font-size: 48px; margin-bottom: 20px;">📋</div>
+                            <div style="color: var(--text-dim); font-size: 16px;">No services have been registered yet.</div>
+                        </td>
+                    </tr>
+                    {% endif %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</body>
+
+</html>

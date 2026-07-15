@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Staff Attendance – Akshaya Centre</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: #0f141a;
+            color: #e0e0e0;
+            min-height: 100vh;
+        }
+
+        header {
+            background: linear-gradient(135deg, #004d40, #00796b);
+            padding: 18px 32px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        header h1 {
+            color: #fff;
+            font-size: 32px;
+        }
+
+        header a {
+            color: #fff;
+            text-decoration: none;
+            border-radius: 20px;
+            font-size: 14px;
+            background: rgba(255, 255, 255, 0.1);
+            padding: 8px 16px;
+            transition: 0.3s;
+        }
+
+        header a:hover {
+            background: rgba(255, 255, 255, 0.2);
+        }
+
+        .manager-profile {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            background: rgba(255, 255, 255, 0.05);
+            padding: 6px 16px;
+            border-radius: 20px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .manager-img {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 2px solid #80cbc4;
+        }
+
+        .manager-name {
+            font-size: 13px;
+            font-weight: 700;
+            color: #fff;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 40px auto;
+            padding: 0 20px;
+        }
+
+        h2 {
+            color: #80cbc4;
+            font-size: 24px;
+            margin-bottom: 24px;
+            text-align: center;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+            border: 1px solid rgba(77, 182, 172, 0.2);
+        }
+
+        th,
+        td {
+            padding: 16px;
+            text-align: left;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        th {
+            background: rgba(0, 0, 0, 0.3);
+            color: #80cbc4;
+            font-weight: bold;
+            text-transform: uppercase;
+            font-size: 13px;
+            letter-spacing: 1px;
+        }
+
+        tr:hover {
+            background: rgba(255, 255, 255, 0.08);
+        }
+
+        td {
+            color: #fff;
+            font-size: 15px;
+        }
+
+        .badge {
+            display: inline-block;
+            padding: 4px 10px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: bold;
+            background: rgba(76, 175, 80, 0.2);
+            color: #66bb6a;
+            border: 1px solid rgba(76, 175, 80, 0.3);
+        }
+
+        .empty-state {
+            text-align: center;
+            color: #888;
+            margin-top: 50px;
+            font-style: italic;
+        }
+    </style>
+</head>
+
+<body>
+    <header>
+        <div style="display: flex; align-items: center; gap: 32px;">
+            <div style="display: flex; align-items: center; gap: 12px;">
+                <h1>Manager Hub</h1>
+            </div>
+            <div style="height: 36px; width: 1px; background: rgba(255, 255, 255, 0.1);"></div>
+            <div style="font-size: 32px; font-weight: 800; color: #80cbc4; letter-spacing: -0.5px;">{{ c_name_branded }}
+            </div>
+        </div>
+        <div style="display: flex; align-items: center; gap: 20px;">
+            <div class="manager-profile">
+                {% if m_pic %}
+                <img src="{{ url_for('static', filename='uploads/' + m_pic) }}" class="manager-img" alt="Manager">
+                {% else %}
+                <div class="manager-img"
+                    style="background: rgba(255,255,255,0.05); display: flex; align-items: center; justify-content: center; font-size: 12px;">
+                    👤</div>
+                {% endif %}
+                <span class="manager-name">{{ m_name }}</span>
+            </div>
+            <a href="/manager">← Dashboard</a>
+        </div>
+    </header>
+    <div class="container">
+        <h2>Attendance Log</h2>
+        {% if not records %}
+        <p class="empty-state">No attendance records found yet.</p>
+        {% else %}
+        <table>
+            <thead>
+                <tr>
+                    <th>Date</th>
+                    <th>Staff Name</th>
+                    <th>Check-in Time</th>
+                    <th>Status</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for row in records %}
+                <tr>
+                    <td>{{ row[0] | format_date }}</td>
+                    <td style="font-weight: bold;">{{ row[1] }}</td>
+                    <td>{{ row[2] | format_time_12h }}</td>
+                    <td><span class="badge">Present</span></td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        {% endif %}
+    </div>
+</body>
+
+</html>

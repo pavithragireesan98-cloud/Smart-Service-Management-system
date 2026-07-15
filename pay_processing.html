@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Processing Payment...</title>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;800&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg: #030712;
+            --primary: #6366f1;
+            --text-main: #f8f9fa;
+        }
+
+        body {
+            background: var(--bg);
+            color: var(--text-main);
+            font-family: 'Outfit', sans-serif;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            margin: 0;
+            overflow: hidden;
+        }
+
+        .loader-container {
+            position: relative;
+            width: 120px;
+            height: 120px;
+            margin-bottom: 40px;
+        }
+
+        .circle {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            border: 4px solid rgba(99, 102, 241, 0.1);
+            border-top: 4px solid var(--primary);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        .circle-inner {
+            position: absolute;
+            width: 80%;
+            height: 80%;
+            top: 10%;
+            left: 10%;
+            border: 4px solid rgba(6, 182, 212, 0.1);
+            border-bottom: 4px solid #06b6d4;
+            border-radius: 50%;
+            animation: spin-reverse 1.5s linear infinite;
+        }
+
+        @keyframes spin {
+            from {
+                transform: rotate(0deg);
+            }
+
+            to {
+                transform: rotate(360deg);
+            }
+        }
+
+        @keyframes spin-reverse {
+            from {
+                transform: rotate(360deg);
+            }
+
+            to {
+                transform: rotate(0deg);
+            }
+        }
+
+        .status-text {
+            font-size: 24px;
+            font-weight: 800;
+            margin-bottom: 12px;
+            letter-spacing: 1px;
+            animation: pulse 2s infinite;
+        }
+
+        .sub-text {
+            color: #94a3b8;
+            font-size: 14px;
+            max-width: 300px;
+            text-align: center;
+            line-height: 1.6;
+        }
+
+        @keyframes pulse {
+
+            0%,
+            100% {
+                opacity: 1;
+            }
+
+            50% {
+                opacity: 0.6;
+            }
+        }
+
+        .progress-bar {
+            width: 200px;
+            height: 4px;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 10px;
+            margin-top: 32px;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, var(--primary), #06b6d4);
+            width: 0%;
+            animation: fillProgress 3s ease-in-out forwards;
+        }
+
+        @keyframes fillProgress {
+            from {
+                width: 0%;
+            }
+
+            to {
+                width: 100%;
+            }
+        }
+
+        #hidden-form {
+            display: none;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="loader-container">
+        <div class="circle"></div>
+        <div class="circle-inner"></div>
+    </div>
+
+    <div class="status-text">Securing Payment...</div>
+    <div class="sub-text">Please do not refresh or close this window while we verify your transaction with Akshaya
+        Secure Vault.</div>
+
+    <div class="progress-bar">
+        <div class="progress-fill"></div>
+    </div>
+
+    <!-- Auto-submit form to finalize -->
+    <form id="hidden-form" action="/citizen/payment/complete/{{ token_id }}" method="POST">
+    </form>
+
+    <script>
+        // Redirect after 3.2 seconds (slightly more than progress bar animation)
+        setTimeout(() => {
+            document.getElementById('hidden-form').submit();
+        }, 3200);
+    </script>
+</body>
+
+</html>

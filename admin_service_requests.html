@@ -1,0 +1,355 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Service Expansion | Akshaya Hub</title>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #8e2de2;
+            --secondary: #4a00e0;
+            --bg: #020412;
+            --card-bg: rgba(255, 255, 255, 0.03);
+            --card-border: rgba(255, 255, 255, 0.08);
+            --text-main: #f8f9fa;
+            --text-dim: #94a3b8;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Outfit', sans-serif;
+        }
+
+        body {
+            background: var(--bg);
+            color: var(--text-main);
+            min-height: 100vh;
+            background-image: radial-gradient(at 0% 0%, rgba(142, 45, 226, 0.1) 0px, transparent 50%);
+        }
+
+        header {
+            background: rgba(2, 4, 18, 0.8);
+            backdrop-filter: blur(20px);
+            padding: 24px 60px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid var(--card-border);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+
+        header h1 {
+            font-size: 20px;
+            font-weight: 800;
+            background: linear-gradient(to right, #fff, #ab67ea);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        header a {
+            color: #fff;
+            text-decoration: none;
+            background: rgba(255, 255, 255, 0.05);
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-size: 13px;
+        }
+
+        .container {
+            max-width: 1000px;
+            margin: 60px auto;
+            padding: 0 40px;
+        }
+
+        h2 {
+            font-size: 28px;
+            font-weight: 800;
+            margin-bottom: 40px;
+        }
+
+        .request-card {
+            background: var(--card-bg);
+            border: 1px solid var(--card-border);
+            border-radius: 24px;
+            padding: 32px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 24px;
+            transition: 0.3s;
+        }
+
+        .request-card:hover {
+            background: rgba(255, 255, 255, 0.05);
+            border-color: var(--primary);
+        }
+
+        .service-info h3 {
+            font-size: 24px;
+            font-weight: 800;
+            margin-bottom: 8px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .badge {
+            font-size: 10px;
+            font-weight: 800;
+            padding: 4px 10px;
+            border-radius: 20px;
+            text-transform: uppercase;
+        }
+
+        .badge.pending { background: #f59e0b; color: #000; }
+        .badge.approved { background: #10b981; color: #000; }
+        .badge.rejected { background: #f43f5e; color: #fff; }
+
+        .detail-item {
+            font-size: 13px;
+            color: var(--text-dim);
+            margin-bottom: 4px;
+        }
+
+        .detail-item strong {
+            color: var(--primary-light);
+            font-weight: 600;
+        }
+
+        .fee {
+            color: #4ade80;
+            font-weight: 800;
+            font-size: 18px;
+        }
+
+        .doc-box {
+            margin-top: 15px;
+            padding-left: 15px;
+            border-left: 2px solid var(--primary);
+            font-size: 13px;
+            color: #fff;
+            font-style: italic;
+        }
+
+        .actions {
+            display: flex;
+            gap: 12px;
+        }
+
+        .btn {
+            padding: 12px 24px;
+            border-radius: 12px;
+            border: none;
+            font-weight: 800;
+            font-size: 14px;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+
+        .btn-approve {
+            background: #10b981;
+            color: #000;
+        }
+
+        .btn-reject {
+            background: rgba(244, 63, 94, 0.1);
+            color: #f43f5e;
+            border: 1px solid rgba(244, 63, 94, 0.2);
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            filter: brightness(1.2);
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 80px;
+            color: var(--text-dim);
+        }
+
+        /* Accordion Styles */
+        .group-header {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid var(--card-border);
+            border-radius: 16px;
+            padding: 20px 30px;
+            margin-bottom: 15px;
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            transition: 0.3s;
+        }
+
+        .group-header:hover {
+            background: rgba(255, 255, 255, 0.06);
+            border-color: var(--primary);
+        }
+
+        .group-title {
+            font-size: 16px;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .group-title span {
+            color: var(--text-dim);
+            font-size: 13px;
+            font-weight: 400;
+        }
+
+        .group-count {
+            background: rgba(142, 45, 226, 0.2);
+            color: var(--primary-light);
+            padding: 4px 10px;
+            border-radius: 12px;
+            font-size: 11px;
+            font-weight: 800;
+            border: 1px solid rgba(142, 45, 226, 0.3);
+        }
+
+        .group-content {
+            display: none;
+            padding-left: 20px;
+            border-left: 2px solid var(--card-border);
+            margin-bottom: 30px;
+            margin-top: 10px;
+        }
+
+        .group-content.active {
+            display: block;
+        }
+
+        .chevron {
+            transition: 0.3s;
+            color: var(--text-dim);
+        }
+
+        .group-header.active .chevron {
+            transform: rotate(180deg);
+        }
+    </style>
+</head>
+
+<body>
+    <header>
+        <h1>Approve Services</h1>
+        <a href="/admin">← Back</a>
+    </header>
+
+    <div class="container">
+        <h2>Service Expansion Requests</h2>
+
+        {% if not requests %}
+        <div class="empty-state">No pending service requests found.</div>
+        {% else %}
+            {% for r in requests %}
+                <div class="request-card">
+                    <div class="service-info">
+                        <h3>{{ r[1] }} <span class="badge {{ r[6].lower() }}">{{ r[6] }}</span></h3>
+                        <div class="detail-item">Centre: <strong>{{ r[4] }}</strong></div>
+                        <div class="detail-item">Requested By: <strong>{{ r[5] }}</strong></div>
+                        <div class="fee">Proposed Fee: ₹{{ r[2] }}</div>
+                        <div class="doc-box">
+                            Documents: {{ r[7] if r[7] else 'None specified' }}
+                        </div>
+                    </div>
+                    {% if r[6] == 'Pending' %}
+                    <form method="POST" class="actions">
+                        <input type="hidden" name="req_id" value="{{ r[0] }}">
+                        <button type="submit" name="action" value="approve" class="btn btn-approve">Approve</button>
+                        <button type="submit" name="action" value="reject" class="btn btn-reject">Reject</button>
+                    </form>
+                    {% endif %}
+                </div>
+            {% endfor %}
+        {% endif %}
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const container = document.querySelector('.container');
+            const cards = document.querySelectorAll('.request-card');
+            
+            if (cards.length === 0) return;
+            
+            // Group cards
+            const groups = {};
+            cards.forEach(card => {
+                const detailItems = card.querySelectorAll('.detail-item');
+                const center = detailItems[0] ? detailItems[0].querySelector('strong').textContent.trim() : 'Unknown Center';
+                const manager = detailItems[1] ? detailItems[1].querySelector('strong').textContent.trim() : 'Unknown Manager';
+                
+                const key = `${manager} @ ${center}`;
+                
+                if (!groups[key]) {
+                    groups[key] = {
+                        manager: manager,
+                        center: center,
+                        cards: []
+                    };
+                }
+                groups[key].cards.push(card);
+            });
+            
+            // Remove existing cards from DOM but keep them in memory
+            cards.forEach(card => card.remove());
+            
+            // Create grouped DOM
+            for (const key in groups) {
+                const group = groups[key];
+                
+                const header = document.createElement('div');
+                header.className = 'group-header';
+                
+                const title = document.createElement('div');
+                title.className = 'group-title';
+                title.innerHTML = `👤 ${group.manager} <span>at</span> 🏢 ${group.center}`;
+                
+                const rightSide = document.createElement('div');
+                rightSide.style.display = 'flex';
+                rightSide.style.alignItems = 'center';
+                rightSide.style.gap = '15px';
+                
+                const count = document.createElement('div');
+                count.className = 'group-count';
+                count.textContent = `${group.cards.length} Request${group.cards.length > 1 ? 's' : ''}`;
+                
+                const chevron = document.createElement('div');
+                chevron.className = 'chevron';
+                chevron.innerHTML = '▼';
+                
+                rightSide.appendChild(count);
+                rightSide.appendChild(chevron);
+                
+                header.appendChild(title);
+                header.appendChild(rightSide);
+                
+                const content = document.createElement('div');
+                content.className = 'group-content';
+                
+                group.cards.forEach(card => {
+                    content.appendChild(card);
+                });
+                
+                header.addEventListener('click', function() {
+                    this.classList.toggle('active');
+                    content.classList.toggle('active');
+                });
+                
+                container.appendChild(header);
+                container.appendChild(content);
+            }
+        });
+    </script>
+</body>
+</html>

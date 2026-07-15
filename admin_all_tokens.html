@@ -1,0 +1,290 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Token History | Admin</title>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #f43f5e;
+            --bg: #05050a;
+            --card-bg: rgba(255, 255, 255, 0.03);
+            --card-border: rgba(255, 255, 255, 0.08);
+            --text-main: #f8f9fa;
+            --text-dim: #94a3b8;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Outfit', sans-serif;
+        }
+
+        body {
+            background: var(--bg);
+            color: var(--text-main);
+            min-height: 100vh;
+            background-image: radial-gradient(at 0% 100%, rgba(244, 63, 94, 0.05) 0px, transparent 50%);
+        }
+
+        header {
+            background: rgba(5, 5, 10, 0.8);
+            backdrop-filter: blur(10px);
+            padding: 20px 60px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid var(--card-border);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        header h1 {
+            font-size: 20px;
+            font-weight: 800;
+            background: linear-gradient(to right, #fff, #f43f5e);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        header a {
+            color: #fff;
+            text-decoration: none;
+            background: rgba(255, 255, 255, 0.05);
+            padding: 8px 20px;
+            border-radius: 30px;
+            font-size: 13px;
+            font-weight: 600;
+            border: 1px solid var(--card-border);
+            transition: 0.3s;
+        }
+
+        header a:hover {
+            background: rgba(244, 63, 94, 0.2);
+            border-color: var(--primary);
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 60px auto;
+            padding: 0 40px;
+        }
+
+        .top-bar {
+            margin-bottom: 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .top-bar h2 {
+            font-size: 28px;
+            font-weight: 800;
+        }
+
+        .table-wrapper {
+            background: var(--card-bg);
+            border: 1px solid var(--card-border);
+            border-radius: 24px;
+            overflow: hidden;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            text-align: left;
+        }
+
+        thead th {
+            background: rgba(255, 255, 255, 0.02);
+            padding: 20px 24px;
+            font-size: 11px;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            color: var(--text-dim);
+            border-bottom: 1px solid var(--card-border);
+        }
+
+        tbody td {
+            padding: 24px;
+            font-size: 14px;
+            border-bottom: 1px solid var(--card-border);
+            transition: 0.3s;
+        }
+
+        tbody tr:last-child td {
+            border-bottom: none;
+        }
+
+        tbody tr:hover td {
+            background: rgba(244, 63, 94, 0.03);
+            color: #fff;
+        }
+
+        .token-badge {
+            font-size: 20px;
+            font-weight: 800;
+            color: var(--primary);
+        }
+
+        .customer-info {
+            font-weight: 700;
+            color: #fff;
+        }
+
+        .status-badge {
+            display: inline-block;
+            padding: 5px 14px;
+            border-radius: 8px;
+            font-size: 11px;
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .status-completed {
+            background: rgba(16, 185, 129, 0.1);
+            color: #10b981;
+        }
+
+        .status-waiting {
+            background: rgba(245, 158, 11, 0.1);
+            color: #f59e0b;
+        }
+
+        .status-called {
+            background: rgba(59, 130, 246, 0.1);
+            color: #3b82f6;
+        }
+
+        .status-cancelled {
+            background: rgba(239, 68, 68, 0.1);
+            color: #ef4444;
+        }
+
+        .centre-tag {
+            color: var(--text-dim);
+            font-size: 13px;
+        }
+
+        .btn-delete-history {
+            background: rgba(244, 63, 94, 0.1);
+            color: var(--primary);
+            border: 1px solid rgba(244, 63, 94, 0.2);
+            padding: 10px 20px;
+            border-radius: 12px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: 0.3s;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .btn-delete-history:hover {
+            background: var(--primary);
+            color: #fff;
+            box-shadow: 0 0 15px rgba(244, 63, 94, 0.4);
+        }
+
+        @media (max-width: 1024px) {
+            .container {
+                padding: 0 20px;
+            }
+
+            td,
+            th {
+                padding: 15px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <header>
+        <h1>Akshaya Digital Gateway</h1>
+        <a href="/admin">← Back to Dashboard</a>
+    </header>
+    <div class="container">
+        <div class="top-bar">
+            <h2>Token History</h2>
+            <div style="display: flex; gap: 10px; align-items: center;">
+                <form method="GET" action="/admin/all_tokens" style="display: flex; gap: 10px; align-items: center; margin: 0;">
+                    <select name="centre_id" onchange="this.form.submit()"
+                        style="background: #0f0f1a; color: #fff; border: 1px solid var(--card-border); padding: 10px 15px; border-radius: 12px; font-size: 14px; outline: none; cursor: pointer;">
+                        <option value="">All Centres</option>
+                        {% for c in centres %}
+                        <option value="{{ c[0] }}" {% if selected_centre|string==c[0]|string %}selected{% endif %}>{{ c[1]
+                            }}</option>
+                        {% endfor %}
+                    </select>
+                </form>
+                <form method="POST" action="/admin/delete_all_tokens" style="margin: 0;" onsubmit="return confirm('Are you sure you want to delete all token history{% if selected_centre %} for the selected centre{% endif %}? This action cannot be undone.')">
+                    {% if selected_centre %}
+                    <input type="hidden" name="centre_id" value="{{ selected_centre }}">
+                    {% endif %}
+                    <button type="submit" class="btn-delete-history">
+                        🗑️ Delete {% if selected_centre %} Centre History {% else %} All History {% endif %}
+                    </button>
+                </form>
+            </div>
+        </div>
+
+        <div class="table-wrapper">
+            <table>
+                <thead>
+                    <tr>
+                        <th width="80">ID</th>
+                        <th>Citizen Details</th>
+                        <th>Service Type</th>
+                        <th>Originating Centre</th>
+                        <th>Schedule</th>
+                        <th>Current Status</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for t in tokens %}
+                    <tr>
+                        <td><span class="token-badge">#{{ t[0] }}</span></td>
+                        <td>
+                            <div class="customer-info">{{ t[1] }}</div>
+                            <div style="font-size: 12px; color: var(--text-dim);">📱 {{ t[2] }}</div>
+                        </td>
+                        <td>
+                            <div style="font-weight: 600;">{{ t[3] }}</div>
+                        </td>
+                        <td>
+                            <div class="centre-tag">🏢 {{ t[4] }}</div>
+                        </td>
+                        <td>
+                            <div style="font-weight: 600;">{{ t[5] }} <span
+                                    style="font-size: 11px; color: var(--text-dim);">at {{ t[6]|format_time_12h
+                                    }}</span></div>
+                        </td>
+                        <td>
+                            <span class="status-badge status-{{ t[7]|lower }}">{{ t[7] }}</span>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                    {% if not tokens %}
+                    <tr>
+                        <td colspan="6" style="text-align: center; padding: 100px 20px;">
+                            <div style="font-size: 48px; margin-bottom: 20px;">🎫</div>
+                            <div style="color: var(--text-dim); font-size: 16px;">No token records found in the system.
+                            </div>
+                        </td>
+                    </tr>
+                    {% endif %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</body>
+
+</html>

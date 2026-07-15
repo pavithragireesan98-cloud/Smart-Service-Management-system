@@ -1,0 +1,634 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>New Service Request | Manager Hub</title>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #2dd4bf;
+            --bg: #020617;
+            --card-bg: rgba(255, 255, 255, 0.03);
+            --card-border: rgba(255, 255, 255, 0.08);
+            --text-main: #f8f9fa;
+            --text-dim: #94a3b8;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Outfit', sans-serif;
+        }
+
+        body {
+            background: var(--bg);
+            color: var(--text-main);
+            min-height: 100vh;
+            background-image: radial-gradient(at 0% 0%, rgba(45, 212, 191, 0.08) 0px, transparent 50%);
+        }
+
+        header {
+            background: rgba(2, 6, 23, 0.8);
+            backdrop-filter: blur(12px);
+            padding: 20px 60px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid var(--card-border);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        header h1 {
+            font-size: 20px;
+            font-weight: 800;
+            background: linear-gradient(to right, #fff, #2dd4bf);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        header a {
+            color: #fff;
+            text-decoration: none;
+            background: rgba(255, 255, 255, 0.05);
+            padding: 8px 24px;
+            border-radius: 30px;
+            font-size: 13px;
+            font-weight: 600;
+            border: 1px solid var(--card-border);
+            transition: 0.3s;
+        }
+
+        header a:hover {
+            background: rgba(45, 212, 191, 0.2);
+            border-color: var(--primary);
+        }
+
+        .container {
+            max-width: 600px;
+            margin: 80px auto;
+            padding: 0 20px;
+        }
+
+        .card {
+            background: var(--card-bg);
+            border: 1px solid var(--card-border);
+            border-radius: 24px;
+            padding: 40px;
+            backdrop-filter: blur(12px);
+            box-shadow: 0 20px 40px rgba(0,0,0,0.3);
+        }
+
+        h2 {
+            font-size: 24px;
+            font-weight: 800;
+            margin-bottom: 12px;
+            color: #fff;
+            text-align: center;
+        }
+
+        p.sub {
+            text-align: center;
+            color: var(--text-dim);
+            font-size: 14px;
+            margin-bottom: 32px;
+        }
+
+        .form-group {
+            margin-bottom: 24px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-size: 13px;
+            font-weight: 600;
+            color: var(--text-dim);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .form-control {
+            width: 100%;
+            padding: 14px 18px;
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid var(--card-border);
+            border-radius: 12px;
+            color: #fff;
+            font-size: 15px;
+            outline: none;
+            transition: 0.3s;
+        }
+
+        .form-control:focus {
+            border-color: var(--primary);
+            background: rgba(255, 255, 255, 0.06);
+            box-shadow: 0 0 15px rgba(45, 212, 191, 0.1);
+        }
+
+        textarea.form-control {
+            resize: vertical;
+            min-height: 100px;
+        }
+
+        .submit-btn {
+            width: 100%;
+            padding: 16px;
+            background: var(--primary);
+            color: #020617;
+            font-weight: 800;
+            border: none;
+            border-radius: 14px;
+            cursor: pointer;
+            font-size: 16px;
+            transition: 0.3s;
+            margin-top: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+
+        .submit-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(45, 212, 191, 0.3);
+            filter: brightness(1.1);
+        }
+
+        .hint {
+            font-size: 11px;
+            color: var(--text-dim);
+            margin-top: 6px;
+            font-style: italic;
+        }
+        /* Modal Styles */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            backdrop-filter: blur(8px);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .modal-content {
+            background: #0f172a;
+            border: 1px solid var(--card-border);
+            border-radius: 24px;
+            padding: 30px;
+            width: 90%;
+            max-width: 600px;
+            max-height: 85vh;
+            overflow-y: auto;
+            position: relative;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+        }
+
+        .close-btn {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background: none;
+            border: none;
+            color: var(--text-dim);
+            font-size: 24px;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+
+        .category-title {
+            font-size: 12px;
+            font-weight: 800;
+            color: var(--primary);
+            margin: 15px 0 8px 0;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .doc-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 10px;
+            margin-bottom: 15px;
+        }
+
+        .doc-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            background: rgba(255,255,255,0.02);
+            padding: 10px;
+            border-radius: 8px;
+            border: 1px solid var(--card-border);
+            cursor: pointer;
+            transition: 0.3s;
+        }
+
+        .doc-item:hover {
+            background: rgba(255,255,255,0.05);
+            border-color: var(--primary);
+        }
+
+        .doc-item input {
+            cursor: pointer;
+        }
+
+        .doc-item label {
+            margin-bottom: 0;
+            font-size: 13px;
+            color: #fff;
+            cursor: pointer;
+            text-transform: none;
+            letter-spacing: 0;
+        }
+        /* Visual Doc List Styles */
+        .visual-doc-list {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            margin-top: 10px;
+        }
+
+        .category-card {
+            background: rgba(255, 255, 255, 0.02);
+            border: 1px solid var(--card-border);
+            border-radius: 12px;
+            padding: 15px;
+            transition: 0.3s;
+        }
+
+        .category-card:hover {
+            background: rgba(255, 255, 255, 0.04);
+            border-color: rgba(45, 212, 191, 0.2);
+        }
+
+        .category-name {
+            font-size: 11px;
+            font-weight: 800;
+            color: var(--primary);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 8px;
+        }
+
+        .tags-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+
+        .tag {
+            background: rgba(255, 255, 255, 0.05);
+            color: #fff;
+            padding: 4px 10px;
+            border-radius: 6px;
+            font-size: 13px;
+            border: 1px solid var(--card-border);
+        }
+    </style>
+</head>
+
+<body>
+    <header>
+        <h1>Request Service</h1>
+        <a href="/manager">Back to Hub</a>
+    </header>
+
+    <div class="container">
+        <div class="card">
+            <h2>Propose New Node</h2>
+            <p class="sub">Submit your request for a new digital service to be integrated into your centre.</p>
+            
+            <form method="POST">
+                <div class="form-group">
+                    <label>Official Service Name</label>
+                    <input type="text" name="service_name" class="form-control" placeholder="e.g. Passport Re-issue" required>
+                </div>
+                
+                <div class="form-group">
+                    <label>Standard Fee (₹)</label>
+                    <input type="number" step="0.01" name="service_fee" class="form-control" placeholder="0.00" required>
+                </div>
+                
+                <div class="form-group">
+                    <label>Brief Description</label>
+                    <textarea name="description" class="form-control" placeholder="What does this service entail?" required></textarea>
+                </div>
+
+                <div class="form-group">
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
+                        <label style="margin-bottom: 0;">Required Documents</label>
+                        <button type="button" style="background: rgba(45, 212, 191, 0.1); color: var(--primary); border: 1px solid rgba(45, 212, 191, 0.2); padding: 6px 12px; border-radius: 6px; font-size: 11px; font-weight: 800; cursor: pointer;" onclick="openDocModal()">📋 Select Standard</button>
+                    </div>
+                    <textarea name="documents" id="hiddenDocs" class="form-control" style="display: none;" required></textarea>
+                    <div id="visualDocList" class="visual-doc-list">
+                        <div style="color: var(--text-dim); font-size: 13px; font-style: italic;">No documents selected yet. Click "Select Standard" to add.</div>
+                    </div>
+                    <div class="hint" style="margin-top: 10px;">Documents will be formatted automatically.</div>
+                </div>
+
+                <button type="submit" class="submit-btn">
+                    Submit Proposal 
+                </button>
+            </form>
+        </div>
+    </div>
+    <!-- Document Selector Modal -->
+    <div id="docModal" class="modal">
+        <div class="modal-content">
+            <button class="close-btn" onclick="closeDocModal()">&times;</button>
+            <h2 style="text-align: left; margin-bottom: 20px;">Select Documents</h2>
+            
+            <div class="category-title">Proof of Identity (PoI)</div>
+            <div class="doc-grid">
+                <div class="doc-item"><input type="checkbox" id="poi_aadhaar" value="Aadhaar Card (PoI)"><label for="poi_aadhaar">Aadhaar Card</label></div>
+                <div class="doc-item"><input type="checkbox" id="poi_passport" value="Passport (PoI)"><label for="poi_passport">Passport</label></div>
+                <div class="doc-item"><input type="checkbox" id="poi_pan" value="PAN Card (PoI)"><label for="poi_pan">PAN Card</label></div>
+                <div class="doc-item"><input type="checkbox" id="poi_voter" value="Voter ID (PoI)"><label for="poi_voter">Voter ID</label></div>
+                <div class="doc-item"><input type="checkbox" id="poi_dl" value="Driving License (PoI)"><label for="poi_dl">Driving License</label></div>
+                <div class="doc-item"><input type="checkbox" id="poi_service_id" value="Service Photo ID Card (PoI)"><label for="poi_service_id">Service Photo ID Card</label></div>
+            </div>
+
+            <div class="category-title">Proof of Address (PoA)</div>
+            <div class="doc-grid">
+                <div class="doc-item"><input type="checkbox" id="poa_aadhaar" value="Aadhaar Card (PoA)"><label for="poa_aadhaar">Aadhaar Card</label></div>
+                <div class="doc-item"><input type="checkbox" id="poa_passport" value="Passport (PoA)"><label for="poa_passport">Passport</label></div>
+                <div class="doc-item"><input type="checkbox" id="poa_voter" value="Voter ID (PoA)"><label for="poa_voter">Voter ID</label></div>
+                <div class="doc-item"><input type="checkbox" id="poa_dl" value="Driving License (PoA)"><label for="poa_dl">Driving License</label></div>
+                <div class="doc-item"><input type="checkbox" id="poa_water_bill" value="Water/Telephone/Electricity Bill"><label for="poa_water_bill">Water/Phone/Electricity Bill</label></div>
+                <div class="doc-item"><input type="checkbox" id="poa_rent" value="Registered Rent Agreement"><label for="poa_rent">Registered Rent Agreement</label></div>
+                <div class="doc-item"><input type="checkbox" id="poa_bank_passbook" value="Bank Passbook (PoA)"><label for="poa_bank_passbook">Bank Passbook</label></div>
+                <div class="doc-item"><input type="checkbox" id="poa_tax_order" value="Income Tax Assessment Order"><label for="poa_tax_order">Income Tax Order</label></div>
+                <div class="doc-item"><input type="checkbox" id="poa_gas_bill" value="Gas Connection Bill"><label for="poa_gas_bill">Gas Connection Bill</label></div>
+            </div>
+
+            <div class="category-title">Proof of Date of Birth (DoB)</div>
+            <div class="doc-grid">
+                <div class="doc-item"><input type="checkbox" id="dob_aadhaar" value="Aadhaar Card (DoB)"><label for="dob_aadhaar">Aadhaar Card</label></div>
+                <div class="doc-item"><input type="checkbox" id="dob_birth" value="Birth Certificate"><label for="dob_birth">Birth Certificate</label></div>
+                <div class="doc-item"><input type="checkbox" id="dob_school" value="School Transfer/Leaving Certificate"><label for="dob_school">School Transfer/Leaving Cert.</label></div>
+                <div class="doc-item"><input type="checkbox" id="dob_sslc" value="SSLC Book/Certificate"><label for="dob_sslc">SSLC Book</label></div>
+                <div class="doc-item"><input type="checkbox" id="dob_marksheet" value="10th Mark Sheet"><label for="dob_marksheet">10th Mark Sheet</label></div>
+                <div class="doc-item"><input type="checkbox" id="dob_pan" value="PAN Card (DoB)"><label for="dob_pan">PAN Card</label></div>
+                <div class="doc-item"><input type="checkbox" id="dob_voter" value="Voter ID Card (DoB)"><label for="dob_voter">Voter ID Card</label></div>
+                <div class="doc-item"><input type="checkbox" id="dob_dl" value="Driving License (DoB)"><label for="dob_dl">Driving License</label></div>
+                <div class="doc-item"><input type="checkbox" id="dob_policy" value="Policy Bond (LIC)"><label for="dob_policy">Policy Bond (LIC)</label></div>
+                <div class="doc-item"><input type="checkbox" id="dob_passport" value="Passport (DoB)"><label for="dob_passport">Passport</label></div>
+            </div>
+
+            <div class="category-title">Proof of Relationship (PoR)</div>
+            <div class="doc-grid">
+                <div class="doc-item"><input type="checkbox" id="por_ration" value="Ration Card"><label for="por_ration">Ration Card</label></div>
+                <div class="doc-item"><input type="checkbox" id="por_gov" value="Govt Card (CGHS/ECHS)"><label for="por_gov">Govt Card</label></div>
+                <div class="doc-item"><input type="checkbox" id="por_pension" value="Pension Card"><label for="por_pension">Pension Card</label></div>
+            </div>
+
+            <div class="category-title">Photographs</div>
+            <div class="doc-grid">
+                <div class="doc-item"><input type="checkbox" id="photo_passport" value="2 Passport-sized Photographs"><label for="photo_passport">2 Passport-sized Photos</label></div>
+                <div class="doc-item"><input type="checkbox" id="photo_voter" value="1 Passport-sized Photograph"><label for="photo_voter">1 Passport-sized Photo</label></div>
+            </div>
+
+            <div class="category-title" style="color: #f59e0b;">Additional — For Minors (Passport)</div>
+            <div class="doc-grid">
+                <div class="doc-item"><input type="checkbox" id="minor_parent" value="Parent's Passport Copy (for Minors)"><label for="minor_parent">Parent's Passport Copy</label></div>
+                <div class="doc-item"><input type="checkbox" id="minor_consent" value="Consent Form Annexure E or H (for Minors)"><label for="minor_consent">Consent Form (Annexure E/H)</label></div>
+            </div>
+
+            <div class="category-title" style="color: #f59e0b;">Additional — For Married/Divorced (Passport)</div>
+            <div class="doc-grid">
+                <div class="doc-item"><input type="checkbox" id="married_cert" value="Marriage Certificate"><label for="married_cert">Marriage Certificate</label></div>
+                <div class="doc-item"><input type="checkbox" id="married_decree" value="Divorce Decree"><label for="married_decree">Divorce Decree</label></div>
+                <div class="doc-item"><input type="checkbox" id="married_annexure" value="Specific Annexures (name/spouse change)"><label for="married_annexure">Specific Annexures</label></div>
+            </div>
+
+            <div class="category-title" style="color: #f59e0b;">Additional — For Certificates</div>
+            <div class="doc-grid">
+                <div class="doc-item"><input type="checkbox" id="cert_school_parents" value="School Certificates of Parents"><label for="cert_school_parents">School Certificates of Parents</label></div>
+                <div class="doc-item"><input type="checkbox" id="cert_conversion" value="Certificate of conversion by responsible authority"><label for="cert_conversion">Conversion Certificate</label></div>
+            </div>
+
+            <div class="category-title" style="color: #f59e0b;">Additional — For Income Certificate</div>
+            <div class="doc-grid">
+                <div class="doc-item"><input type="checkbox" id="income_proof" value="Proof of Income"><label for="income_proof">Proof of Income</label></div>
+                <div class="doc-item"><input type="checkbox" id="income_tax_receipt" value="Basic Tax Payment Receipt"><label for="income_tax_receipt">Basic Tax Payment Receipt</label></div>
+                <div class="doc-item"><input type="checkbox" id="income_land_tax" value="Land Tax"><label for="income_land_tax">Land Tax</label></div>
+                <div class="doc-item"><input type="checkbox" id="income_salary_cert" value="Salary Certificate"><label for="income_salary_cert">Salary Certificate</label></div>
+            </div>
+
+            <button class="submit-btn" onclick="applyDocuments()">Apply Selected Documents</button>
+        </div>
+    </div>
+
+    <script>
+        function openDocModal() {
+            document.getElementById('docModal').style.display = 'flex';
+        }
+
+        function closeDocModal() {
+            document.getElementById('docModal').style.display = 'none';
+        }
+
+        function applyDocuments() {
+            const categories = {
+                'poi': 'Proof of Identity',
+                'poa': 'Proof of Address',
+                'dob': 'Proof of Date of Birth',
+                'por': 'Proof of Relationship',
+                'photo': 'Photographs',
+                'minor': 'Additional — For Minors',
+                'married': 'Additional — For Married/Divorced',
+                'cert': 'Additional — For Certificates',
+                'income': 'Additional — For Income Certificate'
+            };
+            
+            const categoryColors = {
+                'minor': '#f59e0b',
+                'married': '#f59e0b',
+                'cert': '#f59e0b',
+                'income': '#f59e0b'
+            };
+            
+            let resultText = [];
+            const visualList = document.getElementById('visualDocList');
+            visualList.innerHTML = ''; // Clear existing
+            
+            let hasSelection = false;
+            
+            for (const [prefix, label] of Object.entries(categories)) {
+                const checkboxes = document.querySelectorAll(`#docModal input[type="checkbox"][id^="${prefix}_"]:checked`);
+                if (checkboxes.length > 0) {
+                    hasSelection = true;
+                    const docNames = Array.from(checkboxes).map(cb => {
+                        const labelEl = document.querySelector(`label[for="${cb.id}"]`);
+                        return labelEl ? labelEl.textContent : cb.value;
+                    });
+                    
+                    resultText.push(`${label}: ${docNames.join(' / ')}`);
+                    
+                    const card = document.createElement('div');
+                    card.className = 'category-card';
+                    if (categoryColors[prefix]) {
+                        card.style.borderColor = 'rgba(245, 158, 11, 0.25)';
+                        card.style.background = 'rgba(245, 158, 11, 0.04)';
+                    }
+                    
+                    const nameDiv = document.createElement('div');
+                    nameDiv.className = 'category-name';
+                    nameDiv.textContent = label;
+                    if (categoryColors[prefix]) nameDiv.style.color = categoryColors[prefix];
+                    card.appendChild(nameDiv);
+                    
+                    const tagsDiv = document.createElement('div');
+                    tagsDiv.className = 'tags-container';
+                    
+                    docNames.forEach((doc, index) => {
+                        const tag = document.createElement('span');
+                        tag.className = 'tag';
+                        tag.textContent = doc;
+                        tagsDiv.appendChild(tag);
+                        
+                        if (index < docNames.length - 1) {
+                            const separator = document.createElement('span');
+                            separator.textContent = '/';
+                            separator.style.color = 'var(--text-dim)';
+                            separator.style.alignSelf = 'center';
+                            separator.style.fontSize = '14px';
+                            separator.style.margin = '0 2px';
+                            tagsDiv.appendChild(separator);
+                        }
+                    });
+                    
+                    card.appendChild(tagsDiv);
+                    visualList.appendChild(card);
+                }
+            }
+            
+            if (!hasSelection) {
+                visualList.innerHTML = '<div style="color: var(--text-dim); font-size: 13px; font-style: italic;">No documents selected yet. Click "Select Standard" to add.</div>';
+            }
+            
+            const docInput = document.getElementById('hiddenDocs');
+            docInput.value = resultText.join('\n');
+            
+            closeDocModal();
+        }
+
+        window.onclick = function(event) {
+            const modal = document.getElementById('docModal');
+            if (event.target == modal) {
+                modal.style.display = 'none';
+            }
+        }
+
+        // Auto-fill for known services
+        const serviceNameInput = document.querySelector('input[name="service_name"]');
+        const serviceFeeInput = document.querySelector('input[name="service_fee"]');
+
+        const servicePresets = {
+            aadhaar: {
+                keywords: ['aadhaar', 'aadhar', 'aadhaar service', 'aadhar service', 'aadhaar services', 'aadhar services', 'aadhaar update', 'aadhar update'],
+                fee: '100.00',
+                docs: [
+                    'poi_passport', 'poi_pan', 'poi_voter', 'poi_dl',
+                    'poa_passport', 'poa_voter', 'poa_dl',
+                    'dob_birth', 'dob_sslc',
+                    'por_ration'
+                ]
+            },
+            pan: {
+                keywords: ['pan', 'pan card', 'pan card service', 'pan services', 'pan service', 'pan application', 'new pan card'],
+                fee: '80.00',
+                docs: [
+                    'poi_aadhaar',
+                    'poa_aadhaar', 'poa_voter',
+                    'dob_aadhaar', 'dob_birth', 'dob_marksheet',
+                    'photo_passport'
+                ]
+            },
+            passport: {
+                keywords: ['passport', 'passport service', 'passport application', 'new passport', 'passport services', 'passport renewal'],
+                fee: '1500.00',
+                docs: [
+                    'poi_aadhaar', 'poi_pan', 'poi_voter', 'poi_dl', 'poi_service_id',
+                    'poa_aadhaar', 'poa_water_bill', 'poa_rent', 'poa_bank_passbook', 'poa_tax_order', 'poa_gas_bill',
+                    'dob_birth', 'dob_school', 'dob_aadhaar', 'dob_pan', 'dob_dl', 'dob_voter', 'dob_policy',
+                    'photo_passport',
+                    'minor_parent', 'minor_consent',
+                    'married_cert', 'married_decree', 'married_annexure'
+                ]
+            },
+            voter: {
+                keywords: ['voters registration', 'voter registration', 'voter id', 'voters id', 'voter card', 'voters card'],
+                fee: '40.00',
+                docs: [
+                    'photo_voter',
+                    'dob_birth', 'poi_passport', 'poi_dl', 'poi_pan', 'dob_marksheet',
+                    'por_ration', 'poa_passport', 'poa_dl', 'poa_water_bill'
+                ]
+            },
+            caste: {
+                keywords: ['caste certificate', 'caste cert', 'caste'],
+                fee: '30.00',
+                docs: [
+                    'por_ration',
+                    'cert_school_parents',
+                    'cert_conversion'
+                ]
+            },
+            nativity: {
+                keywords: ['nativity certificate', 'nativity cert', 'nativity'],
+                fee: '30.00',
+                docs: [
+                    'dob_birth',
+                    'por_ration',
+                    'cert_school_parents'
+                ]
+            },
+            income: {
+                keywords: ['income certificate', 'income cert', 'income'],
+                fee: '30.00',
+                docs: [
+                    'income_proof',
+                    'income_tax_receipt',
+                    'por_ration',
+                    'income_land_tax',
+                    'income_salary_cert'
+                ]
+            }
+        };
+        
+        serviceNameInput.addEventListener('input', function() {
+            const val = this.value.trim().toLowerCase();
+
+            for (const [key, preset] of Object.entries(servicePresets)) {
+                if (preset.keywords.includes(val)) {
+                    serviceFeeInput.value = preset.fee;
+                    
+                    // Reset all checkboxes
+                    document.querySelectorAll('#docModal input[type="checkbox"]').forEach(cb => cb.checked = false);
+                    
+                    // Check preset documents
+                    preset.docs.forEach(id => {
+                        const cb = document.getElementById(id);
+                        if (cb) cb.checked = true;
+                    });
+                    
+                    applyDocuments();
+                    break;
+                }
+            }
+        });
+    </script>
+</body>
+
+</html>

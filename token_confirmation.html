@@ -1,0 +1,268 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Token Confirmed! – Akshaya Centre</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Segoe UI', sans-serif;
+            background: #0f0f1a;
+            color: #e0e0e0;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .card {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 20px;
+            padding: 44px 36px;
+            max-width: 500px;
+            width: 92%;
+            text-align: center;
+        }
+
+        .check {
+            font-size: 58px;
+            animation: pop 0.5s ease;
+            margin-bottom: 10px;
+        }
+
+        @keyframes pop {
+            0% {
+                transform: scale(0.4);
+                opacity: 0
+            }
+
+            80% {
+                transform: scale(1.1)
+            }
+
+            100% {
+                transform: scale(1);
+                opacity: 1
+            }
+        }
+
+        h2 {
+            font-size: 22px;
+            color: #4caf50;
+            margin-bottom: 6px;
+        }
+
+        p.sub {
+            font-size: 13px;
+            color: #888;
+            margin-bottom: 26px;
+        }
+
+        .token-badge {
+            background: linear-gradient(135deg, #1565c0, #4fc3f7);
+            border-radius: 14px;
+            padding: 18px 28px;
+            margin-bottom: 22px;
+        }
+
+        .token-badge .lbl {
+            font-size: 11px;
+            color: rgba(255, 255, 255, 0.7);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .token-badge .num {
+            font-size: 56px;
+            font-weight: 900;
+            color: #fff;
+            line-height: 1.1;
+        }
+
+        .info-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+            margin-bottom: 22px;
+            text-align: left;
+        }
+
+        .info-box {
+            background: rgba(255, 255, 255, 0.04);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 10px;
+            padding: 11px 14px;
+        }
+
+        .info-box .lbl {
+            font-size: 11px;
+            color: #888;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 3px;
+        }
+
+        .info-box .val {
+            font-size: 13px;
+            color: #fff;
+            font-weight: 600;
+        }
+
+        .sms-box {
+            background: rgba(76, 175, 80, 0.07);
+            border: 1px solid rgba(76, 175, 80, 0.25);
+            border-radius: 10px;
+            padding: 13px 16px;
+            margin-bottom: 22px;
+            text-align: left;
+            font-size: 13px;
+            color: #a5d6a7;
+            line-height: 1.6;
+        }
+
+        .sms-box strong {
+            color: #66bb6a;
+        }
+
+        .app-num {
+            font-size: 12px;
+            color: #888;
+            margin-bottom: 22px;
+        }
+
+        .app-num span {
+            color: #4fc3f7;
+            font-weight: 600;
+        }
+
+        .btn-row {
+            display: flex;
+            gap: 10px;
+            justify-content: center;
+        }
+
+        .btn-home {
+            padding: 11px 24px;
+            background: linear-gradient(135deg, #4fc3f7, #1565c0);
+            color: #fff;
+            border-radius: 10px;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 13px;
+        }
+
+        .btn-check {
+            padding: 11px 24px;
+            background: rgba(255, 255, 255, 0.06);
+            border: 1px solid rgba(255, 255, 255, 0.12);
+            color: #ccc;
+            border-radius: 10px;
+            text-decoration: none;
+            font-size: 13px;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="card">
+        {% if pending %}
+        <div class="check" style="color: #ffc107;">📩</div>
+        <h2 style="color: #ffc107;">Request Submitted!</h2>
+        <p class="sub">Your request has been received. Please wait for the staff to schedule your visit time.</p>
+
+        <div class="info-box" style="margin-bottom: 22px; text-align: center; border-color: #ffc107;">
+            <div class="lbl">Current Status</div>
+            <div class="val" style="font-size: 24px; color: #ffc107;">Waiting for Staff</div>
+        </div>
+
+        <p style="font-size: 13px; color: #aaa; margin-bottom: 22px;">
+            You can track your status using your mobile number. Once scheduled, you will be able to complete the payment
+            to get your token.
+        </p>
+
+        <div class="btn-row">
+            <a href="/citizen/check_status" class="btn-check">🔍 Track Status</a>
+            <a href="/citizen" class="btn-home">Back to Home</a>
+        </div>
+        {% else %}
+        <div class="check">✅</div>
+        <h2>Token Booked Successfully!</h2>
+        <p class="sub">Hello {{ token[8] }}, your token has been confirmed.</p>
+
+        <div class="token-badge">
+            <div class="lbl">Your Token Number</div>
+            <div class="num">{{ token[0] }}</div>
+        </div>
+
+        <div class="info-grid">
+            <div class="info-box">
+                <div class="lbl">Service</div>
+                <div class="val">{{ token[1] }}</div>
+            </div>
+            <div class="info-box">
+                <div class="lbl">Fee</div>
+                <div class="val">₹{{ token[2] }}</div>
+            </div>
+            <div class="info-box">
+                <div class="lbl">Centre</div>
+                <div class="val">{{ token[3] }}</div>
+            </div>
+            <div class="info-box" style="border: 1px solid #4fc3f7;">
+                <div class="lbl" style="color:#4fc3f7;">Scheduled Time</div>
+                <div class="val" style="color:#4fc3f7;">{{ token[11]|format_time_12h }}</div>
+            </div>
+            <div class="info-box">
+                <div class="lbl">Contact</div>
+                <div class="val">{{ token[4] }}</div>
+            </div>
+            <div class="info-box">
+                <div class="lbl">Date</div>
+                <div class="val">{{ token[5] }}</div>
+            </div>
+            <div class="info-box">
+                <div class="lbl">Queue Status</div>
+                <div class="val" style="color:#ffc107;">{{ token[7] }}</div>
+            </div>
+            <div class="info-box">
+                <div class="lbl">Payment</div>
+                <div class="val" style="color:#4caf50;">{% if paid %}Paid{% else %}Unpaid{% endif %}</div>
+            </div>
+            {% if txn_id %}
+            <div class="info-box">
+                <div class="lbl">TXN ID</div>
+                <div class="val">{{ txn_id }}</div>
+            </div>
+            {% endif %}
+        </div>
+
+        <div class="app-num">Application Number: <span>{{ token[10] }}</span></div>
+
+        <!-- SMS Simulation -->
+        <div class="sms-box">
+            📱 <strong>SMS Sent (Simulation):</strong><br>
+            {% if sms_msg %}
+            "{{ sms_msg }}"
+            {% else %}
+            "Dear {{ token[8] }}, your token <strong>#{{ token[0] }}</strong> for <strong>{{ token[1] }}</strong>
+            at <strong>{{ token[3] }}</strong> is confirmed for <strong>{{ token[11]|format_time_12h }}</strong> today
+            ({{ token[5] }}).
+            {% if token[12] %}Scheduled by {{ token[12] }}.{% endif %}
+            App No: {{ token[10] }}. – Akshaya"
+            {% endif %}
+        </div>
+
+        <div class="btn-row">
+            <a href="/citizen" class="btn-check">🏠 Go to Homepage</a>
+        </div>
+        {% endif %}
+    </div>
+</body>
+
+</html>

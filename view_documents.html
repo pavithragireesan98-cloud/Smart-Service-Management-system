@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Required Documents | Akshaya Hub</title>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #3b82f6;
+            --bg: #050714;
+            --card-bg: rgba(255, 255, 255, 0.03);
+            --card-border: rgba(255, 255, 255, 0.08);
+            --text-main: #f8f9fa;
+            --text-dim: #94a3b8;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Outfit', sans-serif;
+        }
+
+        body {
+            background: var(--bg);
+            color: var(--text-main);
+            min-height: 100vh;
+            background-image: radial-gradient(at 0% 0%, rgba(59, 130, 246, 0.1) 0px, transparent 50%);
+        }
+
+        header {
+            background: rgba(5, 7, 20, 0.8);
+            backdrop-filter: blur(12px);
+            padding: 24px 60px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid var(--card-border);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        header h1 {
+            font-size: 20px;
+            font-weight: 800;
+            background: linear-gradient(to right, #fff, #60a5fa);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        header a {
+            color: #fff;
+            text-decoration: none;
+            background: rgba(255, 255, 255, 0.05);
+            padding: 10px 24px;
+            border-radius: 30px;
+            font-size: 13px;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 60px auto;
+            padding: 0 40px;
+        }
+
+        .card {
+            background: var(--card-bg);
+            border: 1px solid var(--card-border);
+            border-radius: 28px;
+            padding: 40px;
+            backdrop-filter: blur(12px);
+            box-shadow: 0 20px 40px rgba(0,0,0,0.4);
+        }
+
+        .service-title {
+            font-size: 28px;
+            font-weight: 800;
+            margin-bottom: 12px;
+            color: #fff;
+        }
+
+        .sub-header {
+            font-size: 14px;
+            color: var(--text-dim);
+            margin-bottom: 32px;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .sub-header::after {
+            content: '';
+            height: 1px;
+            flex: 1;
+            background: var(--card-border);
+        }
+
+        .doc-list {
+            display: grid;
+            gap: 16px;
+        }
+
+        .doc-item {
+            background: rgba(255, 255, 255, 0.02);
+            border: 1px solid var(--card-border);
+            border-radius: 16px;
+            padding: 24px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            transition: 0.3s;
+        }
+
+        .doc-item:hover {
+            background: rgba(255, 255, 255, 0.05);
+            border-color: var(--primary);
+        }
+
+        .doc-name {
+            font-size: 16px;
+            font-weight: 700;
+            color: #fff;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .mandatory-badge {
+            background: rgba(239, 68, 68, 0.1);
+            color: #ef4444;
+            font-size: 10px;
+            font-weight: 800;
+            padding: 4px 10px;
+            border-radius: 8px;
+            text-transform: uppercase;
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 60px 20px;
+            color: var(--text-dim);
+        }
+
+        .back-btn {
+            display: inline-block;
+            margin-top: 40px;
+            color: var(--text-dim);
+            text-decoration: none;
+            font-size: 14px;
+            transition: 0.3s;
+        }
+
+        .back-btn:hover {
+            color: #fff;
+            transform: translateX(-5px);
+        }
+    </style>
+</head>
+
+<body>
+    <header>
+        <h1>Documentation Hub</h1>
+        <a href="javascript:history.back()">Close Portal</a>
+    </header>
+
+    <div class="container">
+        <div class="card">
+            <div class="sub-header">Required for</div>
+            <h2 class="service-title">{{ service_name }}</h2>
+            
+            <div class="doc-list" style="margin-top: 30px;">
+                {% if docs %}
+                    {% for d in docs %}
+                    <div class="doc-item" style="flex-direction: column; align-items: flex-start; gap: 15px;">
+                        <div style="display: flex; justify-content: space-between; width: 100%; align-items: center;">
+                            <div class="doc-name">
+                                <span style="font-size: 20px;">📄</span>
+                                Required Documents
+                            </div>
+                            {% if d[3] %}
+                            <span class="mandatory-badge">Mandatory</span>
+                            {% endif %}
+                        </div>
+                        
+                        <div style="width: 100%; background: rgba(255,255,255,0.01); padding: 16px; border-radius: 12px; border: 1px solid rgba(255,255,255,0.05);">
+                            {% for line in d[2].split('\n') %}
+                                {% set parts = line.split(':') %}
+                                <div style="margin-bottom: 16px;">
+                                    {% if parts|length > 1 %}
+                                        <div style="font-weight: 800; color: #60a5fa; margin-bottom: 6px; font-size: 13px; text-transform: uppercase; letter-spacing: 0.5px;">{{ parts[0] }}:</div>
+                                        <div style="color: #e2e8f0; font-size: 14px; line-height: 1.6; padding-left: 10px;">
+                                            {{ parts[1].strip() }}
+                                        </div>
+                                    {% else %}
+                                        <div style="color: #e2e8f0; font-size: 14px; font-weight: 600;">{{ line }}</div>
+                                    {% endif %}
+                                </div>
+                            {% endfor %}
+                        </div>
+                    </div>
+                    {% endfor %}
+                {% else %}
+                    <div class="empty-state">
+                        <div style="font-size: 48px; margin-bottom: 20px;">📜</div>
+                        <p>No specific documents are listed for this service. <br>We recommend carrying your original <strong>Aadhar Card</strong>.</p>
+                    </div>
+                {% endif %}
+            </div>
+
+            <a href="javascript:history.back()" class="back-btn">← Return to Service Selection</a>
+        </div>
+    </div>
+</body>
+
+</html>

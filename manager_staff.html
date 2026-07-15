@@ -1,0 +1,641 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Team Management | Manager Hub</title>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #2dd4bf;
+            --bg: #020617;
+            --card-bg: rgba(255, 255, 255, 0.03);
+            --card-border: rgba(255, 255, 255, 0.08);
+            --text-main: #f8f9fa;
+            --text-dim: #94a3b8;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Outfit', sans-serif;
+        }
+
+        body {
+            background: var(--bg);
+            color: var(--text-main);
+            min-height: 100vh;
+            background-image: radial-gradient(at 0% 0%, rgba(45, 212, 191, 0.08) 0px, transparent 50%);
+        }
+
+        header {
+            background: rgba(2, 6, 23, 0.8);
+            backdrop-filter: blur(12px);
+            padding: 20px 60px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid var(--card-border);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        header h1 {
+            font-size: 32px;
+            font-weight: 800;
+            background: linear-gradient(to right, #fff, #2dd4bf);
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        header a {
+            color: #fff;
+            text-decoration: none;
+            background: rgba(255, 255, 255, 0.05);
+            padding: 8px 24px;
+            border-radius: 30px;
+            font-size: 13px;
+            font-weight: 600;
+            border: 1px solid var(--card-border);
+            transition: 0.3s;
+        }
+
+        header a:hover {
+            background: rgba(45, 212, 191, 0.2);
+            border-color: var(--primary);
+        }
+
+        .manager-profile {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            background: rgba(255, 255, 255, 0.05);
+            padding: 6px 16px;
+            border-radius: 20px;
+            border: 1px solid var(--card-border);
+        }
+
+        .manager-img {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 2px solid var(--primary);
+        }
+
+        .manager-name {
+            font-size: 13px;
+            font-weight: 700;
+            color: #fff;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 60px auto;
+            padding: 0 40px;
+            display: grid;
+            gap: 40px;
+            grid-template-columns: 380px 1fr;
+        }
+
+        @media (max-width: 1000px) {
+            .container {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .card {
+            background: var(--card-bg);
+            border: 1px solid var(--card-border);
+            border-radius: 24px;
+            padding: 32px;
+            backdrop-filter: blur(12px);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+        }
+
+        h2 {
+            font-size: 14px;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            color: var(--primary);
+            margin-bottom: 24px;
+            font-weight: 800;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-size: 13px;
+            font-weight: 600;
+            color: var(--text-dim);
+        }
+
+        .form-control {
+            width: 100%;
+            padding: 14px 18px;
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid var(--card-border);
+            border-radius: 12px;
+            color: #fff;
+            font-size: 15px;
+            outline: none;
+            transition: 0.3s;
+        }
+
+        .form-control:focus {
+            border-color: var(--primary);
+            background: rgba(255, 255, 255, 0.05);
+        }
+
+        .submit-btn {
+            width: 100%;
+            padding: 16px;
+            background: var(--primary);
+            color: #020617;
+            font-weight: 800;
+            border: none;
+            border-radius: 14px;
+            cursor: pointer;
+            font-size: 15px;
+            transition: 0.3s;
+            margin-top: 10px;
+        }
+
+        .submit-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(45, 212, 191, 0.3);
+            filter: brightness(1.1);
+        }
+
+        .staff-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 20px;
+        }
+
+        .staff-item {
+            background: rgba(255, 255, 255, 0.02);
+            border: 1px solid var(--card-border);
+            padding: 24px;
+            border-radius: 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+            transition: 0.3s;
+        }
+
+        .staff-item:hover {
+            background: rgba(255, 255, 255, 0.04);
+            border-color: var(--primary);
+        }
+
+        .staff-info h4 {
+            font-size: 18px;
+            font-weight: 700;
+            color: #fff;
+            margin-bottom: 4px;
+        }
+
+        .staff-info p {
+            font-size: 13px;
+            color: var(--text-dim);
+        }
+
+        .salary-control {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            background: rgba(0, 0, 0, 0.2);
+            padding: 12px;
+            border-radius: 12px;
+            border: 1px solid var(--card-border);
+        }
+
+        .salary-control input {
+            width: 100%;
+            background: transparent;
+            border: none;
+            color: #4ade80;
+            font-weight: 700;
+            font-size: 16px;
+            outline: none;
+        }
+
+        .update-btn {
+            background: var(--primary);
+            color: #000;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 8px;
+            font-size: 11px;
+            font-weight: 800;
+            text-transform: uppercase;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+
+        .update-btn:hover {
+            filter: brightness(1.2);
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 80px 20px;
+            color: var(--text-dim);
+        }
+
+        .input-with-suffix {
+            display: flex;
+            align-items: center;
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid var(--card-border);
+            border-radius: 12px;
+            padding-right: 18px;
+            transition: 0.3s;
+        }
+
+        .input-with-suffix:focus-within {
+            border-color: var(--primary);
+            background: rgba(255, 255, 255, 0.05);
+        }
+
+        .input-with-suffix input {
+            background: transparent;
+            border: none;
+            padding: 14px 18px;
+            flex: 1;
+        }
+
+        .input-with-suffix .suffix {
+            color: var(--text-dim);
+            font-size: 14px;
+            font-weight: 600;
+        }
+
+        .error-alert {
+            background: rgba(244, 67, 54, 0.1);
+            border: 1px solid rgba(244, 67, 54, 0.3);
+            color: #ff8a80;
+            padding: 12px;
+            border-radius: 12px;
+            font-size: 14px;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        .password-input-wrapper {
+            position: relative;
+            width: 100%;
+        }
+
+        .show-toggle {
+            position: absolute;
+            right: 14px;
+            top: 50%;
+            transform: translateY(-50%);
+            background: none;
+            border: none;
+            color: var(--primary);
+            font-size: 11px;
+            font-weight: 800;
+            cursor: pointer;
+            text-transform: uppercase;
+            z-index: 10;
+        }
+
+        /* Modal Styles */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            backdrop-filter: blur(8px);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .modal-content {
+            background: #0f172a;
+            border: 1px solid var(--card-border);
+            border-radius: 24px;
+            padding: 40px;
+            width: 90%;
+            max-width: 500px;
+            position: relative;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+        }
+
+        .close-btn {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background: none;
+            border: none;
+            color: var(--text-dim);
+            font-size: 24px;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+
+        .close-btn:hover {
+            color: #fff;
+        }
+
+        .modal-profile-pic {
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 3px solid var(--primary);
+            margin: 0 auto 20px auto;
+            display: block;
+        }
+
+        .modal-info-group {
+            margin-bottom: 15px;
+        }
+
+        .modal-info-label {
+            font-size: 11px;
+            text-transform: uppercase;
+            color: var(--text-dim);
+            letter-spacing: 1px;
+            margin-bottom: 4px;
+        }
+
+        .modal-info-value {
+            font-size: 15px;
+            color: #fff;
+            font-weight: 600;
+        }
+    </style>
+</head>
+
+<body>
+    <header>
+        <div style="display: flex; align-items: center; gap: 32px;">
+            <div style="display: flex; align-items: center; gap: 12px;">
+                <h1>Manager Hub</h1>
+            </div>
+            <div style="height: 36px; width: 1px; background: var(--card-border);"></div>
+            <div style="font-size: 32px; font-weight: 800; color: var(--primary); letter-spacing: -0.5px;">{{
+                c_name_branded }}</div>
+        </div>
+        <div style="display: flex; align-items: center; gap: 20px;">
+            <div class="manager-profile">
+                {% if m_pic %}
+                <img src="{{ url_for('static', filename='uploads/' + m_pic) }}" class="manager-img" alt="Manager">
+                {% else %}
+                <div class="manager-img"
+                    style="background: rgba(255,255,255,0.05); display: flex; align-items: center; justify-content: center; font-size: 12px;">
+                    👤</div>
+                {% endif %}
+                <span class="manager-name">{{ m_name }}</span>
+            </div>
+            <a href="/manager">← Dashboard</a>
+        </div>
+    </header>
+
+    <div class="container">
+        <!-- Add Staff Form -->
+        <div class="card">
+            {% if error %}
+            <div class="error-alert">⚠️ {{ error }}</div>
+            {% endif %}
+            <form method="POST" id="staffForm" enctype="multipart/form-data">
+                <input type="hidden" name="action" id="formAction" value="add_staff">
+                <input type="hidden" name="staff_id" id="formStaffId" value="">
+                <div class="form-group">
+                    <label>Full Name</label>
+                    <input type="text" name="name" class="form-control" placeholder="e.g. John Doe" required>
+                </div>
+                <div class="form-group">
+                    <label>Corporate Email</label>
+                    <input type="email" name="email" class="form-control" placeholder="example@gmail.com"
+                        pattern="[a-zA-Z0-9._%+-]+@gmail\.com$"
+                        title="Only Gmail addresses ending with @gmail.com are allowed" required>
+                </div>
+                <div class="form-group">
+                    <label>Secure Password</label>
+                    <div class="password-input-wrapper">
+                        <input type="password" name="password" id="password" class="form-control" minlength="8"
+                            maxlength="8" pattern=".{8}" title="Exactly 8 characters" placeholder="Create password"
+                            required>
+                        <button type="button" class="show-toggle" onclick="togglePass('password', this)">Show</button>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label>Confirm Password</label>
+                    <div class="password-input-wrapper">
+                        <input type="password" name="confirm_password" id="confirm_password" class="form-control"
+                            minlength="8" maxlength="8" pattern=".{8}" title="Exactly 8 characters"
+                            placeholder="Repeat password" required>
+                        <button type="button" class="show-toggle"
+                            onclick="togglePass('confirm_password', this)">Show</button>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label>Phone Number</label>
+                    <input type="tel" name="phone" id="phone" class="form-control" placeholder="10-digit mobile"
+                        required pattern="[0-9]{10}" maxlength="10" minlength="10" title="Exactly 10 digits"
+                        oninput="this.value = this.value.replace(/[^0-9]/g, '')">
+                </div>
+                <div class="form-group">
+                    <label>Address</label>
+                    <textarea name="address" class="form-control" rows="3" placeholder="Enter staff address"
+                        required></textarea>
+                </div>
+                <div class="form-group">
+                    <label>Profile Picture</label>
+                    <input type="file" name="profile_picture" class="form-control" accept="image/*" required>
+                </div>
+                <button type="submit" class="submit-btn" name="action" value="add_staff">Onboard Member</button>
+            </form>
+        </div>
+
+        <!-- Staff List -->
+        <div class="card" style="background: transparent; border: none; box-shadow: none; padding: 0;">
+            <h2>Current Members</h2>
+            {% if not Staff_list %}
+            <div class="card empty-state">
+                <div style="font-size: 40px; margin-bottom: 20px;">👥</div>
+                <p>No staff members have been onboarded to this centre yet.</p>
+            </div>
+            {% else %}
+            <div class="staff-grid">
+                {% for staff in Staff_list %}
+                <div class="staff-item">
+                    <div style="display: flex; gap: 20px; align-items: center; justify-content: space-between;">
+                        <div style="display: flex; gap: 20px; align-items: center;">
+                            {% if staff[3] %}
+                            <img src="{{ url_for('static', filename=staff[3]) }}" alt="Profile"
+                                style="width: 50px; height: 50px; border-radius: 50%; object-fit: cover; border: 2px solid var(--primary);">
+                            {% else %}
+                            <div
+                                style="width: 50px; height: 50px; border-radius: 50%; background: rgba(255,255,255,0.1); display: flex; align-items: center; justify-content: center; font-size: 20px;">
+                                👤</div>
+                            {% endif %}
+                            <div class="staff-info">
+                                <h4 style="cursor: pointer; text-decoration: underline; color: var(--primary);"
+                                    onclick='showStaffDetails({{ staff[0] }}, {{ staff[1]|tojson }}, {{ staff[2]|tojson }}, {{ staff[4]|tojson }}, {{ staff[5]|tojson }}, {{ (url_for("static", filename=staff[3]) if staff[3] else "")|tojson }})'>
+                                    {{ staff[1] }}</h4>
+                                <p>{{ staff[2] }}</p>
+                            </div>
+                        </div>
+                        <div style="display: flex; gap: 10px;">
+                            <button class="update-btn"
+                                style="background: rgba(255,255,255,0.05); color: #fff; border: 1px solid var(--card-border); padding: 8px 16px; border-radius: 8px; font-size: 11px; font-weight: 800; cursor: pointer;"
+                                onclick='editStaff({{ staff[0] }}, {{ staff[1]|tojson }}, {{ staff[2]|tojson }}, {{ staff[4]|tojson }}, {{ staff[5]|tojson }})'>Edit</button>
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+            {% endif %}
+        </div>
+    </div>
+
+    <script>
+        document.getElementById('staffForm').addEventListener('submit', function (e) {
+            const pass = document.getElementById('password').value;
+            const cpass = document.getElementById('confirm_password').value;
+            const email = document.querySelector('input[name="email"]').value;
+            const phone = document.getElementById('phone').value;
+
+            if (pass !== cpass) {
+                e.preventDefault();
+                alert("Passwords do not match!");
+                return;
+            }
+            if (pass.length < 8) {
+                e.preventDefault();
+                alert("Password must be at least 8 characters long!");
+                return;
+            }
+            if (!email.endsWith("@gmail.com")) {
+                e.preventDefault();
+                alert("Please enter a valid email address ending with @gmail.com");
+                return;
+            }
+            if (phone.length !== 10) {
+                e.preventDefault();
+                alert("Mobile number must be exactly 10 digits!");
+                return;
+            }
+        });
+
+        function togglePass(id, btn) {
+            const el = document.getElementById(id);
+            if (el.type === 'password') {
+                el.type = 'text';
+                btn.textContent = 'Hide';
+            } else {
+                el.type = 'password';
+                btn.textContent = 'Show';
+            }
+        }
+        function showStaffDetails(id, name, email, phone, address, picUrl) {
+            document.getElementById('modalName').textContent = name;
+            document.getElementById('modalEmail').textContent = email;
+            document.getElementById('modalPhone').textContent = phone;
+            document.getElementById('modalAddress').textContent = address;
+            document.getElementById('modalStaffId').value = id;
+
+            const pic = document.getElementById('modalPic');
+            if (picUrl) {
+                pic.src = picUrl;
+                pic.style.display = 'block';
+            } else {
+                pic.style.display = 'none';
+            }
+
+            document.getElementById('staffModal').style.display = 'flex';
+        }
+
+        function closeModal() {
+            document.getElementById('staffModal').style.display = 'none';
+        }
+
+        window.onclick = function (event) {
+            const modal = document.getElementById('staffModal');
+            if (event.target == modal) {
+                modal.style.display = 'none';
+            }
+        }
+        function editStaff(id, name, email, phone, address) {
+            document.getElementById('formAction').value = 'update_staff';
+            document.getElementById('formStaffId').value = id;
+
+            document.querySelector('input[name="name"]').value = name;
+            document.querySelector('input[name="email"]').value = email;
+            document.getElementById('phone').value = phone;
+            document.querySelector('textarea[name="address"]').value = address;
+
+            // Passwords and pic are optional for update
+            document.getElementById('password').required = false;
+            document.getElementById('confirm_password').required = false;
+            document.querySelector('input[name="profile_picture"]').required = false;
+
+            document.querySelector('.submit-btn').textContent = 'Update Member';
+            document.querySelector('.submit-btn').style.background = '#4ade80'; // Green for update
+
+            // Scroll to form
+            document.getElementById('staffForm').scrollIntoView({ behavior: 'smooth' });
+        }
+    </script>
+    <!-- Modal -->
+    <div id="staffModal" class="modal">
+        <div class="modal-content">
+            <button class="close-btn" onclick="closeModal()">&times;</button>
+            <img id="modalPic" src="" alt="Profile" class="modal-profile-pic">
+
+            <div class="modal-info-group">
+                <div class="modal-info-label">Name</div>
+                <div id="modalName" class="modal-info-value"></div>
+            </div>
+
+            <div class="modal-info-group">
+                <div class="modal-info-label">Email</div>
+                <div id="modalEmail" class="modal-info-value"></div>
+            </div>
+
+            <div class="modal-info-group">
+                <div class="modal-info-label">Phone</div>
+                <div id="modalPhone" class="modal-info-value"></div>
+            </div>
+
+            <div class="modal-info-group">
+                <div class="modal-info-label">Address</div>
+                <div id="modalAddress" class="modal-info-value"></div>
+            </div>
+
+            <div style="margin-top: 30px; display: flex; justify-content: flex-end; gap: 15px;">
+                <button class="update-btn"
+                    style="background: rgba(255,255,255,0.05); color: #fff; border: 1px solid var(--card-border); padding: 8px 16px; border-radius: 8px; font-size: 11px; font-weight: 800; cursor: pointer;"
+                    onclick="closeModal()">Close</button>
+                <form method="POST" id="modalDeleteForm" style="display:inline;"
+                    onsubmit="return confirm('Are you sure you want to remove this staff?');">
+                    <input type="hidden" name="action" value="delete_staff">
+                    <input type="hidden" name="staff_id" id="modalStaffId" value="">
+                    <button type="submit"
+                        style="background: rgba(239, 68, 68, 0.2); color: #f87171; border: 1px solid rgba(239, 68, 68, 0.2); padding: 8px 16px; border-radius: 8px; font-size: 11px; font-weight: 800; cursor: pointer; text-transform: uppercase;">Remove</button>
+                </form>
+            </div>
+        </div>
+    </div>
+    </div>
+</body>
+
+</html>

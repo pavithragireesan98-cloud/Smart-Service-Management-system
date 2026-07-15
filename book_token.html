@@ -1,0 +1,403 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Book Token | Akshaya Service Hub</title>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&display=swap"
+        rel="stylesheet">
+    <style>
+        :root {
+            --primary: #6366f1;
+            --primary-light: #818cf8;
+            --secondary: #06b6d4;
+            --bg: #030712;
+            --card-bg: rgba(255, 255, 255, 0.03);
+            --card-border: rgba(255, 255, 255, 0.1);
+            --text-main: #f8f9fa;
+            --text-dim: #94a3b8;
+            --glass: rgba(15, 23, 42, 0.7);
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Outfit', sans-serif;
+        }
+
+        body {
+            background: var(--bg);
+            color: var(--text-main);
+            min-height: 100vh;
+            background-image:
+                radial-gradient(circle at 0% 0%, rgba(99, 102, 241, 0.1) 0%, transparent 40%),
+                radial-gradient(circle at 100% 100%, rgba(6, 182, 212, 0.1) 0%, transparent 40%);
+            display: flex;
+            flex-direction: column;
+        }
+
+        nav {
+            padding: 24px 5%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: rgba(3, 7, 18, 0.8);
+            backdrop-filter: blur(20px);
+            border-bottom: 1px solid var(--card-border);
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-size: 20px;
+            font-weight: 800;
+            color: #fff;
+            text-decoration: none;
+        }
+
+        .logo-icon {
+            width: 36px;
+            height: 36px;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .container {
+            max-width: 650px;
+            margin: 60px auto;
+            padding: 0 5%;
+            width: 100%;
+        }
+
+        .glass-card {
+            background: var(--glass);
+            border: 1px solid var(--card-border);
+            border-radius: 32px;
+            padding: 48px;
+            backdrop-filter: blur(40px);
+            box-shadow: 0 40px 100px rgba(0, 0, 0, 0.5);
+        }
+
+        .header-info {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        .header-info h2 {
+            font-size: 32px;
+            font-weight: 800;
+            margin-bottom: 12px;
+            background: linear-gradient(to right, #fff, var(--primary-light));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .centre-pill {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 6px 16px;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 100px;
+            font-size: 13px;
+            color: var(--text-dim);
+            border: 1px solid var(--card-border);
+        }
+
+        .service-details {
+            margin-top: 24px;
+            background: rgba(255, 255, 255, 0.02);
+            padding: 24px;
+            border-radius: 20px;
+            border: 1px solid var(--card-border);
+        }
+
+        .detail-row {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 12px;
+            font-size: 14px;
+        }
+
+        .detail-row span:first-child {
+            color: var(--text-dim);
+        }
+
+        .detail-row span:last-child {
+            font-weight: 700;
+            color: #fff;
+        }
+
+        .fee-total {
+            margin-top: 15px;
+            padding-top: 15px;
+            border-top: 1px dashed var(--card-border);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .fee-total .val {
+            font-size: 24px;
+            font-weight: 800;
+            color: var(--secondary);
+        }
+
+        .doc-section {
+            margin: 32px 0;
+        }
+
+        .section-title {
+            font-size: 12px;
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            color: var(--primary-light);
+            margin-bottom: 16px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .doc-list {
+            list-style: none;
+        }
+
+        .doc-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 12px 16px;
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid var(--card-border);
+            border-radius: 12px;
+            margin-bottom: 8px;
+            font-size: 14px;
+        }
+
+        .mandatory-tag {
+            font-size: 10px;
+            font-weight: 800;
+            background: rgba(244, 63, 94, 0.1);
+            color: #f43f5e;
+            padding: 2px 8px;
+            border-radius: 6px;
+            margin-left: auto;
+            text-transform: uppercase;
+        }
+
+        /* Form */
+        .form-group {
+            margin-bottom: 24px;
+        }
+
+        label {
+            display: block;
+            font-size: 13px;
+            font-weight: 600;
+            color: var(--text-dim);
+            margin-bottom: 10px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        input {
+            width: 100%;
+            padding: 16px 20px;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid var(--card-border);
+            border-radius: 16px;
+            color: #fff;
+            font-size: 16px;
+            transition: 0.3s;
+        }
+
+        input:focus {
+            outline: none;
+            border-color: var(--primary);
+            background: rgba(255, 255, 255, 0.08);
+            box-shadow: 0 0 0 4px rgba(99, 102, 241, 0.1);
+        }
+
+        .submit-btn {
+            width: 100%;
+            padding: 18px;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            border: none;
+            border-radius: 16px;
+            color: #fff;
+            font-size: 16px;
+            font-weight: 800;
+            cursor: pointer;
+            transition: 0.3s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+            box-shadow: 0 10px 25px rgba(99, 102, 241, 0.3);
+        }
+
+        .submit-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 15px 35px rgba(99, 102, 241, 0.5);
+            filter: brightness(1.1);
+        }
+
+        .back-link {
+            display: block;
+            text-align: center;
+            margin-top: 24px;
+            color: var(--text-dim);
+            text-decoration: none;
+            font-size: 14px;
+            transition: 0.3s;
+        }
+
+        .back-link:hover {
+            color: #fff;
+        }
+
+        @media (max-width: 600px) {
+            .container {
+                padding: 0 15px;
+                margin: 30px auto;
+            }
+
+            .glass-card {
+                padding: 24px;
+                border-radius: 24px;
+            }
+
+            .header-info h2 {
+                font-size: 24px;
+            }
+
+            .submit-btn {
+                padding: 15px;
+                font-size: 14px;
+            }
+
+            .detail-row {
+                flex-direction: column;
+                gap: 4px;
+                align-items: flex-start;
+            }
+
+            .detail-row span:last-child {
+                text-align: left;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <nav>
+        <a href="/citizen" class="logo">
+            <div class="logo-icon">🏛</div>
+            Akshaya Hub
+        </a>
+    </nav>
+
+    <div class="container">
+        <div class="glass-card">
+            <div class="header-info">
+                <div class="centre-pill">🏛 {{ centre[1] }}</div>
+                <h2 style="margin-top: 20px;">{{ service[1] }}</h2>
+                <p style="color: var(--text-dim); font-size: 14px;">Complete your booking request below</p>
+            </div>
+
+            <div class="service-details">
+                <div class="detail-row">
+                    <span>Centre Location</span>
+                    <span>{{ centre[2] }}</span>
+                </div>
+                <div class="detail-row">
+                    <span>Contact Reference</span>
+                    <span>+91 {{ centre[3] }}</span>
+                </div>
+                <div class="fee-total">
+                    <span style="font-weight: 600;">Service Fee</span>
+                    <span class="val">₹{{ service[2] }}</span>
+                </div>
+            </div>
+
+            {% if docs %}
+            <div class="doc-section">
+                <div class="section-title">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"
+                        stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+                        <polyline points="14 2 14 8 20 8"></polyline>
+                    </svg>
+                    Required Documents
+                </div>
+                <div class="doc-list" style="display: flex; flex-direction: column; gap: 12px;">
+                    {% for d in docs %}
+                    <div
+                        style="background: rgba(255,255,255,0.01); padding: 16px; border-radius: 12px; border: 1px solid var(--card-border);">
+                        <div
+                            style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">
+                            <div style="font-size: 14px; font-weight: 700; color: #fff;">📄 Document Details</div>
+                            {% if d[1] %}
+                            <span class="mandatory-tag">Mandatory</span>
+                            {% endif %}
+                        </div>
+
+                        {% for line in d[0].split('\n') %}
+                        {% set parts = line.split(':') %}
+                        <div style="margin-bottom: 12px;">
+                            {% if parts|length > 1 %}
+                            <div
+                                style="font-weight: 800; color: #60a5fa; margin-bottom: 4px; font-size: 12px; text-transform: uppercase; letter-spacing: 0.5px;">
+                                {{ parts[0] }}:</div>
+                            <div style="color: #e2e8f0; font-size: 13px; line-height: 1.5; padding-left: 10px;">
+                                {{ parts[1].strip() }}
+                            </div>
+                            {% else %}
+                            <div style="color: #e2e8f0; font-size: 13px;">{{ line }}</div>
+                            {% endif %}
+                        </div>
+                        {% endfor %}
+                    </div>
+                    {% endfor %}
+                </div>
+                {% endif %}
+                {% if error %}
+                <div
+                    style="background: rgba(244, 67, 54, 0.15); border: 1px solid rgba(244, 67, 54, 0.5); color: #ff8a80; padding: 15px; border-radius: 8px; font-size: 14px; text-align: center; margin-bottom: 20px;">
+                    ⚠️ {{ error }}
+                </div>
+                {% endif %}
+
+                <form method="POST">
+                    <input type="hidden" name="centre_id" value="{{ centre[0] }}">
+
+                    <div class="form-group">
+                        <label>Your Full Name</label>
+                        <input type="text" name="user_name" placeholder="John Doe" required autocomplete="name">
+                    </div>
+
+                    <div class="form-group">
+                        <label>Mobile Number</label>
+                        <input type="tel" name="mobile_number" placeholder="9876543210" pattern="[0-9]{10}"
+                            maxlength="10" minlength="10" required autocomplete="tel"
+                            oninput="this.value = this.value.replace(/[^0-9]/g, '')">
+                    </div>
+
+                    <button type="submit" class="submit-btn">
+                        <span>🎫</span> Generate Token Request
+                    </button>
+                </form>
+
+                <a href="javascript:history.back()" class="back-link">Cancel and go back</a>
+            </div>
+        </div>
+</body>
+
+</html>

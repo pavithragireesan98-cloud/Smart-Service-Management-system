@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Citizen Requests | Staff Dashboard</title>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #4fc3f7;
+            --bg: #0a0a12;
+            --glass: rgba(255, 255, 255, 0.03);
+            --glass-border: rgba(255, 255, 255, 0.08);
+        }
+        body { font-family: 'Outfit', sans-serif; background: var(--bg); color: #fff; padding: 40px; }
+        .container { max-width: 1000px; margin: 0 auto; }
+        h1 { margin-bottom: 30px; font-weight: 800; color: var(--primary); }
+        table { width: 100%; border-collapse: collapse; background: var(--glass); border-radius: 12px; overflow: hidden; backdrop-filter: blur(10px); }
+        th, td { padding: 16px; text-align: left; border-bottom: 1px solid var(--glass-border); }
+        th { background: rgba(255,255,255,0.05); font-size: 13px; text-transform: uppercase; letter-spacing: 1px; color: #888; }
+        .status { padding: 4px 12px; border-radius: 20px; font-size: 11px; font-weight: 700; text-transform: uppercase; }
+        .status-pending { background: rgba(255, 193, 7, 0.1); color: #ffc107; }
+        .status-ivr-pending { background: rgba(255, 193, 7, 0.1); color: #ffc107; }
+        .status-processed { background: rgba(76, 175, 80, 0.1); color: #4caf50; }
+        .btn-back { display: inline-block; margin-bottom: 20px; color: var(--primary); text-decoration: none; font-size: 14px; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <a href="/staff" class="btn-back">← Back to Tokens</a>
+        <h1>Citizen Service Requests (IVR Incoming)</h1>
+        <table>
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Citizen</th>
+                    <th>Mobile</th>
+                    <th>Service</th>
+                    <th>Status</th>
+                    <th>Requested At</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for req in requests %}
+                <tr>
+                    <td>#{{ req[0] }}</td>
+                    <td>{{ req[1] }}</td>
+                    <td>{{ req[2] }}</td>
+                    <td>{{ req[3] }}</td>
+                    <td><span class="status status-{{ req[4].lower().replace(' ', '-') }}">{{ req[4] }}</span></td>
+                    <td>{{ req[5] }}</td>
+                    <td>
+                        {% if req[4] == 'IVR_Pending' %}
+                        <form method="POST" action="/Staff/approve_request/{{ req[0] }}">
+                            <button type="submit" style="background: var(--primary); border: none; color: #000; padding: 6px 12px; border-radius: 6px; font-weight: 700; cursor: pointer; font-size: 11px;">Issue Token</button>
+                        </form>
+                        {% else %}
+                        <span style="color: #4caf50; font-size: 11px; font-weight: 700;">✅ Token Issued</span>
+                        {% endif %}
+                    </td>
+                </tr>
+                {% else %}
+                <tr>
+                    <td colspan="7" style="text-align: center; padding: 50px; color: #888;">No pending voice requests found for your centre.</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</body>
+</html>

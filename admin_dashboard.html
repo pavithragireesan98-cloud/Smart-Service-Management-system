@@ -1,0 +1,380 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin HQ | Akshaya Service Hub</title>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #8e2de2;
+            --primary-light: #ab67ea;
+            --secondary: #4a00e0;
+            --accent: #ffd700;
+            --bg: #020410;
+            --card-bg: rgba(255, 255, 255, 0.03);
+            --card-border: rgba(255, 255, 255, 0.1);
+            --text-main: #f8f9fa;
+            --text-dim: #94a3b8;
+            --glass: rgba(15, 23, 42, 0.7);
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Outfit', sans-serif;
+        }
+
+        body {
+            background: var(--bg);
+            color: var(--text-main);
+            min-height: 100vh;
+            background-image: 
+                radial-gradient(circle at 0% 0%, rgba(142, 45, 226, 0.1) 0%, transparent 40%),
+                radial-gradient(circle at 100% 100%, rgba(74, 0, 224, 0.1) 0%, transparent 40%);
+        }
+
+        /* Navbar */
+        nav {
+            position: sticky;
+            top: 0;
+            width: 100%;
+            padding: 24px 5%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: rgba(2, 4, 16, 0.8);
+            backdrop-filter: blur(20px);
+            border-bottom: 1px solid var(--card-border);
+            z-index: 1000;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-size: 32px;
+            font-weight: 800;
+            background: linear-gradient(135deg, #fff 0%, var(--primary-light) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            text-decoration: none;
+        }
+
+        .logo-icon {
+            width: 44px;
+            height: 44px;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 22px;
+            color: #fff;
+            box-shadow: 0 8px 20px rgba(142, 45, 226, 0.3);
+        }
+
+        .btn-logout {
+            color: #fff;
+            text-decoration: none;
+            background: rgba(244, 63, 94, 0.1);
+            padding: 12px 28px;
+            border-radius: 14px;
+            font-size: 13px;
+            font-weight: 700;
+            border: 1px solid rgba(244, 63, 94, 0.2);
+            transition: 0.3s;
+        }
+
+        .btn-logout:hover {
+            background: #f43f5e;
+            box-shadow: 0 8px 20px rgba(244, 63, 94, 0.3);
+            transform: translateY(-2px);
+        }
+
+        /* Main */
+        .container {
+            max-width: 1400px;
+            margin: 60px auto;
+            padding: 0 5%;
+        }
+
+        .welcome-header {
+            margin-bottom: 60px;
+        }
+
+        .welcome-header h2 {
+            font-size: 48px;
+            font-weight: 800;
+            margin-bottom: 16px;
+            letter-spacing: -1px;
+            background: linear-gradient(to bottom, #fff, var(--text-dim));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .welcome-header p {
+            color: var(--text-dim);
+            font-size: 18px;
+            max-width: 600px;
+        }
+
+        /* Stats Grid */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 24px;
+            margin-bottom: 80px;
+        }
+
+        .stat-card {
+            background: var(--glass);
+            border: 1px solid var(--card-border);
+            border-radius: 32px;
+            padding: 40px;
+            transition: 0.4s;
+            backdrop-filter: blur(20px);
+        }
+
+        .stat-card:hover {
+            transform: translateY(-10px);
+            border-color: rgba(255,255,255,0.2);
+            box-shadow: 0 40px 80px rgba(0,0,0,0.5);
+        }
+
+        .stat-val {
+            font-size: 64px;
+            font-weight: 800;
+            line-height: 1;
+            margin-bottom: 12px;
+            display: block;
+            letter-spacing: -2px;
+        }
+
+        .stat-lbl {
+            font-size: 12px;
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            color: var(--primary-light);
+        }
+
+        /* Console Title */
+        .console-title {
+            font-size: 14px;
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: 3px;
+            color: var(--accent);
+            margin-bottom: 40px;
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .console-title::after {
+            content: '';
+            height: 1px;
+            flex: 1;
+            background: linear-gradient(to right, var(--card-border), transparent);
+        }
+
+        /* Menu Grid */
+        .menu-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
+            gap: 24px;
+        }
+
+        .menu-card {
+            background: var(--card-bg);
+            border: 1px solid var(--card-border);
+            border-radius: 32px;
+            padding: 48px 32px;
+            text-decoration: none;
+            color: inherit;
+            transition: 0.4s cubic-bezier(0.19, 1, 0.22, 1);
+            display: flex;
+            align-items: center;
+            gap: 28px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .menu-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            opacity: 0;
+            transition: 0.4s;
+            z-index: 0;
+        }
+
+        .menu-card:hover {
+            transform: translateY(-12px);
+            border-color: rgba(255,255,255,0.2);
+            box-shadow: 0 40px 80px rgba(0,0,0,0.6);
+        }
+
+        .menu-card:hover::before { opacity: 0.1; }
+
+        .icon-box {
+            width: 70px;
+            height: 70px;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 32px;
+            transition: 0.4s;
+            z-index: 1;
+            flex-shrink: 0;
+        }
+
+        .menu-card:hover .icon-box {
+            background: var(--primary);
+            color: #fff;
+            transform: scale(1.1) rotate(-8deg);
+            box-shadow: 0 10px 25px rgba(142, 45, 226, 0.4);
+        }
+
+        .card-info { z-index: 1; }
+
+        .card-info h3 {
+            font-size: 22px;
+            font-weight: 700;
+            color: #fff;
+            margin-bottom: 6px;
+        }
+
+        .card-info p {
+            color: var(--text-dim);
+            font-size: 15px;
+            line-height: 1.5;
+        }
+
+        .notification-badge {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background: #f43f5e;
+            color: #fff;
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 12px;
+            font-weight: 800;
+            box-shadow: 0 4px 10px rgba(244, 63, 94, 0.4);
+            z-index: 2;
+        }
+
+        @media (max-width: 900px) {
+            .welcome-header h2 { font-size: 36px; }
+            nav { padding: 20px 5%; }
+        }
+    </style>
+</head>
+
+<body>
+    <nav>
+        <a href="/admin" class="logo">
+            <div class="logo-icon">🏛</div>
+            Admin HQ
+        </a>
+        <div style="font-size: 32px; font-weight: 800; color: var(--primary-light); letter-spacing: 1px;">SYSTEM CONTROL</div>
+        <a href="/logout" class="btn-logout">Sign Out</a>
+    </nav>
+
+    <div class="container">
+        <div class="welcome-header">
+            <h2>Welcome, Administrator</h2>
+            <p>Maintain complete oversight of the Akshaya network, manage global registries, and authorize system nodes.</p>
+        </div>
+
+        <div class="stats-grid">
+            <div class="stat-card">
+                <span class="stat-val">{{ total_centres }}</span>
+                <span class="stat-lbl">Registered Centres</span>
+            </div>
+            <div class="stat-card">
+                <span class="stat-val">{{ total_Services }}</span>
+                <span class="stat-lbl">Active Services</span>
+            </div>
+            <div class="stat-card">
+                <span class="stat-val">{{ today_tokens }}</span>
+                <span class="stat-lbl">Daily Traffic</span>
+            </div>
+            <div class="stat-card">
+                <span class="stat-val" style="color: var(--accent);">{{ completed }}</span>
+                <span class="stat-lbl">Tasks Completed</span>
+            </div>
+        </div>
+
+        <div class="console-title">Governance Modules</div>
+
+        <div class="menu-grid">
+            <a href="/admin/manager_requests?view=centre" class="menu-card">
+                <div class="icon-box">🏢</div>
+                <div class="card-info">
+                    <h3>Approve Centres</h3>
+                    <p>Review and authorize new Akshaya centre requests from managers.</p>
+                </div>
+            </a>
+
+            <a href="/view_centres" class="menu-card">
+                <div class="icon-box">📍</div>
+                <div class="card-info">
+                    <h3>Centre Registry</h3>
+                    <p>Full directory of verified and active service hubs.</p>
+                </div>
+            </a>
+
+            <a href="/admin/manager_requests?view=manager" class="menu-card">
+                <div class="icon-box">🛂</div>
+                <div class="card-info">
+                    <h3>Manager Validation</h3>
+                    <p>Audit credentials for new administrative personnel.</p>
+                </div>
+            </a>
+
+            <a href="/view_services" class="menu-card">
+                <div class="icon-box">📋</div>
+                <div class="card-info">
+                    <h3>Service Catalogue</h3>
+                    <p>Global monitor for all digital services in the network.</p>
+                </div>
+            </a>
+
+            <a href="/admin/all_tokens" class="menu-card">
+                <div class="icon-box">🎫</div>
+                <div class="card-info">
+                    <h3>Token History</h3>
+                    <p>Comprehensive database of all service bookings.</p>
+                </div>
+            </a>
+
+            <a href="/admin/service_requests" class="menu-card">
+                <div class="icon-box">✨</div>
+                <div class="card-info">
+                    <h3>Service Expansion</h3>
+                    <p>Authorize category updates for individual centres.</p>
+                </div>
+                {% if pending_service_requests > 0 %}
+                <div class="notification-badge">{{ pending_service_requests }}</div>
+                {% endif %}
+            </a>
+        </div>
+    </div>
+</body>
+
+</html>

@@ -1,0 +1,288 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Registration Requests | Akshaya Digital Gateway</title>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #8e2de2;
+            --bg: #05050a;
+            --card-bg: rgba(255, 255, 255, 0.03);
+            --card-border: rgba(255, 255, 255, 0.08);
+            --text-main: #f8f9fa;
+            --text-dim: #94a3b8;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Outfit', sans-serif;
+        }
+
+        body {
+            background: var(--bg);
+            color: var(--text-main);
+            min-height: 100vh;
+        }
+
+        header {
+            background: rgba(15, 15, 26, 0.8);
+            backdrop-filter: blur(12px);
+            padding: 20px 60px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid var(--card-border);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        header h1 {
+            font-size: 20px;
+            font-weight: 800;
+            background: linear-gradient(to right, #fff, #ab67ea);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        header a {
+            color: #fff;
+            text-decoration: none;
+            background: rgba(255, 255, 255, 0.05);
+            padding: 8px 20px;
+            border-radius: 30px;
+            font-size: 13px;
+            border: 1px solid var(--card-border);
+            transition: 0.3s;
+        }
+
+        header a:hover {
+            background: rgba(255, 255, 255, 0.1);
+        }
+
+        .container {
+            max-width: 1000px;
+            margin: 50px auto;
+            padding: 0 30px;
+        }
+
+        h2 {
+            font-size: 24px;
+            font-weight: 800;
+            color: #fff;
+            margin-bottom: 40px;
+        }
+
+        .req-card {
+            background: var(--card-bg);
+            border: 1px solid var(--card-border);
+            border-radius: 20px;
+            padding: 30px;
+            margin-bottom: 24px;
+            display: grid;
+            grid-template-columns: 1fr auto;
+            gap: 20px;
+            transition: 0.3s;
+        }
+
+        .req-card:hover {
+            border-color: var(--primary);
+            background: rgba(255, 255, 255, 0.05);
+        }
+
+        .req-info {
+            display: flex;
+            gap: 60px;
+        }
+
+        .req-group h4 {
+            color: var(--text-dim);
+            font-size: 11px;
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            margin-bottom: 12px;
+            font-weight: 700;
+        }
+
+        .req-group p {
+            font-size: 15px;
+            color: #fff;
+            margin-bottom: 8px;
+        }
+
+        .req-group strong {
+            color: var(--text-dim);
+            font-weight: 400;
+            margin-right: 5px;
+        }
+
+        .status-box {
+            text-align: right;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+
+        .badge {
+            display: inline-block;
+            padding: 6px 14px;
+            border-radius: 30px;
+            font-size: 11px;
+            font-weight: 800;
+            text-transform: uppercase;
+        }
+
+        .badge.Pending { background: rgba(255, 193, 7, 0.1); color: #ffc107; border: 1px solid rgba(255, 193, 7, 0.2); }
+        .badge.Approved { background: rgba(76, 175, 80, 0.1); color: #4caf50; border: 1px solid rgba(76, 175, 80, 0.2); }
+        .badge.Rejected { background: rgba(244, 67, 54, 0.1); color: #ff5252; border: 1px solid rgba(244, 67, 54, 0.2); }
+
+        .req-actions {
+            margin-top: 20px;
+            display: flex;
+            gap: 12px;
+        }
+
+        .req-actions button {
+            padding: 10px 24px;
+            border: none;
+            border-radius: 12px;
+            font-weight: 700;
+            cursor: pointer;
+            font-size: 13px;
+            transition: 0.2s;
+        }
+
+        .btn-approve {
+            background: #4caf50;
+            color: #fff;
+        }
+
+        .btn-approve:hover {
+            background: #43a047;
+            transform: scale(1.05);
+            box-shadow: 0 4px 15px rgba(76, 175, 80, 0.4);
+        }
+
+        .btn-reject {
+            background: rgba(244, 67, 54, 0.1);
+            color: #ff5252;
+            border: 1px solid rgba(244, 67, 54, 0.2);
+        }
+
+        .btn-reject:hover {
+            background: #f44336;
+            color: #fff;
+            transform: scale(1.05);
+            box-shadow: 0 4px 15px rgba(244, 67, 54, 0.4);
+        }
+
+        .empty-state {
+            text-align: center;
+            color: var(--text-dim);
+            padding: 100px 0;
+            font-size: 18px;
+            font-weight: 300;
+        }
+
+        @media (max-width: 768px) {
+            .req-info { flex-direction: column; gap: 30px; }
+            .req-card { grid-template-columns: 1fr; }
+            .status-box { text-align: left; }
+        }
+    </style>
+</head>
+
+<body>
+    <header>
+        <h1>
+            {% if view_type == 'manager' %}
+            👤 Approve Managers
+            {% elif view_type == 'centre' %}
+            🏢 Approve Centres
+            {% else %}
+            🔔 All Requests
+            {% endif %}
+        </h1>
+        <a href="/admin">← Dashboard</a>
+    </header>
+    <div class="container">
+        <h2>
+            {% if view_type == 'manager' %}
+            Pending Managers
+            {% elif view_type == 'centre' %}
+            Pending Centres
+            {% else %}
+            All Requests
+            {% endif %}
+        </h2>
+
+        {% if not requests %}
+        <div class="empty-state">No pending registrations in the queue.</div>
+        {% else %}
+        {% for req in requests %}
+        <div class="req-card">
+            <div class="req-info">
+                <div class="req-group">
+                    <h4>Applicant Profile</h4>
+                    {% if req[7] %}
+                    <div style="position: relative; width: 80px; height: 80px; margin-bottom: 10px;">
+                        <img src="{{ url_for('static', filename=req[7]) }}" alt="Profile" 
+                             style="width: 80px; height: 80px; border-radius: 50%; object-fit: cover; border: 2px solid var(--primary);"
+                             onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+                        <div style="display: none; width: 80px; height: 80px; border-radius: 50%; border: 2px solid var(--primary); background: #8e2de2; color: #fff; align-items: center; justify-content: center; font-size: 32px; font-weight: 800;">
+                            {{ req[1][0]|upper }}
+                        </div>
+                    </div>
+                    {% else %}
+                    <div style="width: 80px; height: 80px; border-radius: 50%; border: 2px solid var(--card-border); background: rgba(255,255,255,0.05); color: var(--text-dim); display: flex; align-items: center; justify-content: center; font-size: 32px; margin-bottom: 10px;">
+                        👤
+                    </div>
+                    {% endif %}
+                    <p><strong>Name:</strong> {{ req[1] }}</p>
+                    <p><strong>Email:</strong> {{ req[2] }}</p>
+                    <p><strong>Contact:</strong> {{ req[5] }}</p>
+                </div>
+                <div class="req-group">
+                    <h4>Address & Request</h4>
+                    <p><strong>Address:</strong> {{ req[8] if req[8] else 'N/A' }}</p>
+                    {% if req[3] %}
+                    <p><strong>Centre Name:</strong> {{ req[3] }}</p>
+                    <p><strong>Location:</strong> {{ req[4] }}</p>
+                    {% else %}
+                    <p style="color: var(--text-dim); font-style: italic;">No centre requested yet.</p>
+                    {% endif %}
+                </div>
+            </div>
+
+            <div class="status-box">
+                <div>
+                    <span class="badge {{ req[6] }}">{{ req[6] }}</span>
+                </div>
+                {% if req[6] == 'Pending' %}
+                <div class="req-actions">
+                    <form method="POST">
+                        <input type="hidden" name="req_id" value="{{ req[0] }}">
+                        <button type="submit" name="action" value="approve" class="btn-approve">Approve</button>
+                        <button type="submit" name="action" value="reject" class="btn-reject">Reject</button>
+                    </form>
+                </div>
+                {% elif req[6] == 'Approved' %}
+                <div class="req-actions">
+                    <form action="/admin/delete_manager/{{ req[0] }}" method="POST">
+                        <button type="submit" class="btn-reject" onclick="return confirm('Are you sure you want to remove this manager?')">Remove Manager</button>
+                    </form>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+        {% endfor %}
+        {% endif %}
+    </div>
+</body>
+
+</html>
